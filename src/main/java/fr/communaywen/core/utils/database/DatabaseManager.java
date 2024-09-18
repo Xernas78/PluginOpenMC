@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.PreparedStatement;
 
 public class DatabaseManager {
 
@@ -44,8 +45,8 @@ public class DatabaseManager {
                 ")").executeUpdate();
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS mailbox_items (" +
                                                       "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY," +
-                                                      "sender_id UUID NOT NULL," +
-                                                      "receiver_id UUID NOT NULL," +
+                                                      "sender_id VARCHAR(36) NOT NULL," +
+                                                      "receiver_id VARCHAR(36) NOT NULL," +
                                                       "items BLOB NOT NULL," +
                                                       "items_count INT NOT NULL," +
                                                       "sent_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP," +
@@ -58,6 +59,8 @@ public class DatabaseManager {
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS teams_player (teamName VARCHAR(16) NOT NULL, player VARCHAR(36) NOT NULL)").executeUpdate();
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS teams (teamName VARCHAR(16) NOT NULL PRIMARY KEY, owner VARCHAR(36) NOT NULL, balance BIGINT UNSIGNED, inventory LONGBLOB)").executeUpdate();
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS transactions (recipient VARCHAR(36), sender VARCHAR(36), amount DOUBLE, reason VARCHAR(255), date TIMESTAMP DEFAULT CURRENT_TIMESTAMP)").executeUpdate();
+        this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS advancements (player VARCHAR(36) , advancement VARCHAR(255), value INT, PRIMARY KEY (player, advancement))").executeUpdate();
+
 
         //Système de signalements
 
@@ -71,7 +74,8 @@ public class DatabaseManager {
                 "  pos1z double NOT NULL," +
                 "  pos2x double NOT NULL," +
                 "  pos2z double NOT NULL," +
-                "  world varchar(20) NOT NULL" +
+                "  world varchar(20) NOT NULL," +
+                "  claimer varchar(36) NOT NULL" +
                 ")").executeUpdate();
 
         // Système d'économie
@@ -86,7 +90,28 @@ public class DatabaseManager {
                 "  difficulty TINYINT NOT NULL" +
                 ")").executeUpdate();
 
+        // Système de Contest
+        // table prog contest
+        this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS contest (phase int(11), camp1 VARCHAR(36), color1 VARCHAR(36), camp2 VARCHAR(36), color2 VARCHAR(36), startdate VARCHAR(36), points1 int(11), points2 int(11))").executeUpdate();
+        PreparedStatement state = connection.getConnection().prepareStatement("SELECT COUNT(*) FROM contest");
+        ResultSet rs = state.executeQuery();
+
+        // push first contest
+        if(rs.next()) {
+            if(rs.getInt(1) == 0) {
+                PreparedStatement states = this.getConnection().prepareStatement("INSERT INTO contest (phase, camp1, color1, camp2, color2, startdate, points1, points2) VALUES (1, 'Mayonnaise', 'YELLOW', 'Ketchup', 'RED', ?, 0,0)");
+
+                String dateContestStart = "ven.";
+                states.setString(1, dateContestStart);
+                states.executeUpdate();
+            }
+        }
+
+        // Table camps
+        this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS camps (minecraft_uuid VARCHAR(36), name VARCHAR(36), camps int(11), point_dep int(11))").executeUpdate();
+
         System.out.println("Les tables ont été créées si besoin");
+        this.getConnection().prepareStatement("ALTER TABLE claim ADD COLUMN IF NOT EXISTS claimer VARCHAR(36) NOT NULL").executeUpdate();
     }
 
     public void close() {

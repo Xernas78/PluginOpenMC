@@ -8,6 +8,7 @@ import fr.communaywen.core.claim.ClaimListener;
 import fr.communaywen.core.claim.GamePlayer;
 import fr.communaywen.core.claim.RegionManager;
 import fr.communaywen.core.clockinfos.tasks.CompassClockTask;
+import fr.communaywen.core.commands.contest.ContestCommand;
 import fr.communaywen.core.commands.credits.CreditCommand;
 import fr.communaywen.core.commands.credits.FeatureCommand;
 import fr.communaywen.core.commands.economy.AdminShopCommand;
@@ -17,6 +18,7 @@ import fr.communaywen.core.commands.economy.PayCommands;
 import fr.communaywen.core.commands.explosion.ExplodeRandomCommand;
 import fr.communaywen.core.commands.explosion.FBoomCommand;
 import fr.communaywen.core.commands.fun.*;
+import fr.communaywen.core.commands.teams.TeamClaim;
 import fr.communaywen.core.commands.link.LinkCommand;
 import fr.communaywen.core.commands.link.ManualLinkCommand;
 import fr.communaywen.core.commands.randomEvents.RandomEventsCommand;
@@ -28,6 +30,9 @@ import fr.communaywen.core.commands.teams.TeamCommand;
 import fr.communaywen.core.commands.teleport.RTPCommand;
 import fr.communaywen.core.commands.teleport.SpawnCommand;
 import fr.communaywen.core.commands.utils.*;
+import fr.communaywen.core.contest.ContestIntractEvents;
+import fr.communaywen.core.contest.ContestListener;
+import fr.communaywen.core.contest.FirerocketSpawnListener;
 import fr.communaywen.core.customitems.commands.ShowCraftCommand;
 import fr.communaywen.core.customitems.listeners.CIBreakBlockListener;
 import fr.communaywen.core.customitems.listeners.CIEnchantListener;
@@ -38,6 +43,10 @@ import fr.communaywen.core.friends.commands.FriendsCommand;
 import fr.communaywen.core.levels.LevelsCommand;
 import fr.communaywen.core.levels.LevelsListeners;
 import fr.communaywen.core.listeners.*;
+import fr.communaywen.core.luckyblocks.commands.LuckyBlockCommand;
+import fr.communaywen.core.luckyblocks.listeners.LBBlockBreakListener;
+import fr.communaywen.core.luckyblocks.listeners.LBPlayerInteractListener;
+import fr.communaywen.core.luckyblocks.listeners.LBPlayerQuitListener;
 import fr.communaywen.core.mailboxes.MailboxCommand;
 import fr.communaywen.core.mailboxes.MailboxListener;
 import fr.communaywen.core.managers.ChunkListManager;
@@ -48,10 +57,7 @@ import fr.communaywen.core.quests.qenum.QUESTS;
 import fr.communaywen.core.commands.staff.FreezeCommand;
 import fr.communaywen.core.commands.staff.PlayersCommand;
 import fr.communaywen.core.tab.TabList;
-import fr.communaywen.core.tpa.TPACommand;
-import fr.communaywen.core.tpa.TpacceptCommand;
-import fr.communaywen.core.tpa.TpcancelCommand;
-import fr.communaywen.core.tpa.TpdenyCommand;
+import fr.communaywen.core.tpa.*;
 import fr.communaywen.core.trade.TradeAcceptCommand;
 import fr.communaywen.core.trade.TradeCommand;
 import fr.communaywen.core.trade.TradeListener;
@@ -86,8 +92,10 @@ import revxrsal.commands.autocomplete.SuggestionProvider;
 import revxrsal.commands.bukkit.BukkitCommandHandler;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.*;
 
 public final class AywenCraftPlugin extends JavaPlugin {
     public static ArrayList<Player> frozenPlayers = new ArrayList<>();
@@ -143,6 +151,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         MenuLib.init(this);
         managers.initConfig(this);
         managers.init(this);
+        ClaimConfigDataBase.loadAllClaimsData();
 
         eventsManager = new EventsManager(this, loadEventsManager()); // TODO: include to Managers.java
 
@@ -175,10 +184,12 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.handler = BukkitCommandHandler.create(this);
         this.interactiveHelpMenu = InteractiveHelpMenu.create();
         this.handler.accept(interactiveHelpMenu);
+        this.handler.getTranslator().setLocale(Locale.FRENCH);
 
         this.handler.getAutoCompleter().registerSuggestion("featureName", SuggestionProvider.of(managers.getWikiConfig().getKeys(false)));
 
         this.handler.register(
+                new ContestCommand(this, loadEventsManager()),
                 new TeamAdminCommand(this),
                 new SpawnCommand(this),
                 new RulesCommand(managers.getBookConfig()),
@@ -187,7 +198,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new ScoreboardCommand(),
                 new ProutCommand(),
                 new TPACommand(this),
-                new TpacceptCommand(this),  // Pass the plugin instance
+                new TpacceptCommand(this),
+                new TPAGUICommand(this),
                 new TpcancelCommand(),
                 new TpdenyCommand(),
                 new CreditCommand(),
@@ -219,7 +231,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new ReportCommands(),
                 new ChatChannelCMD(),
                 new MailboxCommand(),
-                new RandomEventsCommand(this)
+                new RandomEventsCommand(this),
+                new TeamClaim(),
+                new LuckyBlockCommand(managers.getLbPlayerManager())
         );
 
         /*  --------  */
@@ -240,6 +254,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         /* LISTENERS */
         registerEvents(
+                new FirerocketSpawnListener(this),
+                new ContestListener(this, loadEventsManager()),
+                new ContestIntractEvents(),
                 new NoMoreLapins(),
                 new KebabListener(this),
                 new AntiTrampling(),
@@ -250,7 +267,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new ChatListener(this, discordWebhook),
                 new FreezeListener(this),
                 new WelcomeMessage(managers.getWelcomeMessageConfig()),
-                new Insomnia(),
+                new Dream(this),
                 new VpnListener(this),
                 new ThorHammer(),
                 new FriendsListener(managers.getFriendsManager()),
@@ -270,7 +287,10 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new BabyFuzeListener(),
                 new MailboxListener(),
                 new ElevatorListener(),
-                new ChunkListManager()
+                new ChunkListManager(),
+                new LBBlockBreakListener(managers.getLuckyBlockManager()),
+                new LBPlayerQuitListener(managers.getLuckyBlockManager()),
+                new LBPlayerInteractListener(managers.getLuckyBlockManager())
         );
 
         getServer().getPluginManager().registerEvents(eventsManager, this); // TODO: refactor
@@ -289,7 +309,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         }
 
         QuestsManager.initializeQuestsTable();
-        ClaimConfigDataBase.loadAllClaims();
+        ClaimConfigDataBase.processStoredClaimData();
         new BandageRecipe();
     }
 
@@ -303,6 +323,13 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 player.closeInventory(); // Close inventory
             }
         }
+        try {
+            this.getConfig().save(new File(this.getDataFolder(), "config.yml"));
+            loadEventsManager().save(new File(this.getDataFolder(), "events.yml"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         managers.cleanup();
     }
 
@@ -342,9 +369,9 @@ public final class AywenCraftPlugin extends JavaPlugin {
         ItemStack crazyPotion = new ItemStack(Material.POTION);
         PotionMeta meta = (PotionMeta) crazyPotion.getItemMeta();
 
-        meta.setDisplayName("§k NEW §r §4 Crazy Potion §r §k NEW");
+        meta.setDisplayName("§k NEW §r §4 Mining Potion §r §k NEW");
         meta.addCustomEffect(new PotionEffect(PotionEffectType.SPEED, 4800, 9), true);
-        meta.addCustomEffect(new PotionEffect(PotionEffectType.HASTE, 4800, 9), true);
+        meta.addCustomEffect(new PotionEffect(PotionEffectType.HASTE, 4800, 55), true);
 
         crazyPotion.setItemMeta(meta);
 

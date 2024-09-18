@@ -4,6 +4,7 @@ import fr.communaywen.core.adminshop.shopinterfaces.BaseItems;
 import fr.communaywen.core.adminshop.menu.category.ShopType;
 import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.Feature;
+import org.bukkit.Material;
 
 @Credit("Axeno")
 @Feature("AdminShop")
@@ -22,8 +23,8 @@ public enum BlocksItems implements BaseItems {
     GRAVEL(29, 2, ShopType.SELL, "§7Gravier"),
     GRANITE(30, 2, ShopType.SELL, "§7Granite"),
     OBSIDIAN(31, 10, ShopType.SELL, "§7Obsidienne"),
-    PACKED_ICE(32, 6, ShopType.SELL, "§7Glace compactée"),
-    MOSS_BLOCK(33, 3, ShopType.SELL, "§7Bloc de mousse"),
+    PACKED_ICE(32, 2, ShopType.SELL, "§7Glace compactée"),
+    MOSS_BLOCK(33, 0.75, ShopType.SELL, "§7Bloc de mousse"),
     FLOWERING_AZALEA_LEAVES(34, 3, ShopType.SELL, "§7Feuilles d'azalée fleurie"),
     TERRACOTTA(39, 2, ShopType.TERRACOTTA, "§7Terre cuite"),
     GLASS(40, 2, ShopType.GLASS, "§7Verre"),
@@ -67,4 +68,9 @@ public enum BlocksItems implements BaseItems {
         return name();
     }
 
+    @Override
+    public int getMaxStack() {
+        Material material = Material.getMaterial(this.named());;
+        return material == null ? 64 : material.getMaxStackSize();
+    }
 }

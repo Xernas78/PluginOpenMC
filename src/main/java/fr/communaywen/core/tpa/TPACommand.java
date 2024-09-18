@@ -16,7 +16,7 @@ import revxrsal.commands.annotation.Named;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 @Feature("TPA")
-@Credit({"ddemile", "Axillity", "misieur", "process"})
+@Credit({"Axillity", "ddemile", "misieur", "process"})
 public class TPACommand implements Listener {
 
     private final AywenCraftPlugin plugin;
@@ -39,6 +39,11 @@ public class TPACommand implements Listener {
         if (target == null) {
             player.sendMessage(Component.text("[TPA] ❌ Le joueur '" + targetName + "' n'est pas en ligne.")
                     .color(TextColor.color(255, 0, 0)));
+            return;
+        }
+
+        if (target.getWorld().getName().equals("dreamworld")) {
+            player.sendMessage("Vous ne pouvez pas téléporter quelq'un dans la dimension");
             return;
         }
 
