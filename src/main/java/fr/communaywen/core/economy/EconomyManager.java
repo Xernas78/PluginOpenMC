@@ -1,13 +1,14 @@
 package fr.communaywen.core.economy;
 
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
+import fr.communaywen.core.credit.annotations.Credit;
+import fr.communaywen.core.credit.annotations.Feature;
 import fr.communaywen.core.quests.PlayerQuests;
 import fr.communaywen.core.quests.QuestsManager;
 import fr.communaywen.core.quests.qenum.QUESTS;
 import fr.communaywen.core.quests.qenum.TYPE;
 import lombok.Getter;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
@@ -25,8 +26,8 @@ public class EconomyManager {
         this.balances = EconomyData.loadBalances();
     }
 
-    public double getBalance(Player player) {
-        return balances.getOrDefault(player.getUniqueId(), 0.0);
+    public double getBalance(UUID player) {
+        return balances.getOrDefault(player, 0.0);
     }
 
     public static double getBalanceOffline(OfflinePlayer player) {
@@ -34,16 +35,15 @@ public class EconomyManager {
     }
 
 
-    public void addBalance(Player player, double amount) {
-        UUID uuid = player.getUniqueId();
-        balances.put(uuid, getBalance(player) + amount);
+    public void addBalance(UUID uuid, double amount) {
+        balances.put(uuid, getBalance(uuid) + amount);
 
-        saveBalances(player);
+        saveBalances(uuid);
         for(QUESTS quests : QUESTS.values()) {
-            PlayerQuests pq = QuestsManager.getPlayerQuests(player);
+            PlayerQuests pq = QuestsManager.getPlayerQuests(uuid);
             if(quests.getType() == TYPE.MONEY) {
                 if(!pq.isQuestCompleted(quests)) {
-                    QuestsManager.manageQuestsPlayer(player, quests, (int) amount, " argents récoltés");
+                    QuestsManager.manageQuestsPlayer(uuid, quests, (int) amount, " argents récoltés");
                 }
             }
         }
@@ -56,11 +56,10 @@ public class EconomyManager {
         saveBalancesOffline(player);
     }
 
-    public boolean withdrawBalance(Player player, double amount) {
-        UUID uuid = player.getUniqueId();
+    public boolean withdrawBalance(UUID player, double amount) {
         double balance = getBalance(player);
         if (balance >= amount && amount > 0) {
-            balances.put(uuid, balance - amount);
+            balances.put(player, balance - amount);
             saveBalances(player);
             for(QUESTS quests : QUESTS.values()) {
                 PlayerQuests pq = QuestsManager.getPlayerQuests(player);
@@ -77,15 +76,23 @@ public class EconomyManager {
     }
 
     public boolean transferBalance(Player from, Player to, double amount) {
-        if (withdrawBalance(from, amount)) {
-            addBalance(to, amount);
+        if (withdrawBalance(from.getUniqueId(), amount)) {
+            addBalance(to.getUniqueId(), amount);
             return true;
         } else {
             return false;
         }
     }
 
-    private void saveBalances(Player player) {
+    public static String formatValue(double value) {
+        return value > 0 ? ChatColor.GREEN + String.valueOf(value) : ChatColor.RED + String.valueOf(value);
+    }
+
+    public static String formatValue(int value) {
+        return value > 0 ? ChatColor.GREEN + String.valueOf(value) : ChatColor.RED + String.valueOf(value);
+    }
+
+    private void saveBalances(UUID player) {
         EconomyData.saveBalances(player, balances);
     }
     private static void saveBalancesOffline(OfflinePlayer player) {

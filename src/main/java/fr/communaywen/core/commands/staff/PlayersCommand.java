@@ -1,7 +1,7 @@
 package fr.communaywen.core.commands.staff;
 
-import fr.communaywen.core.credit.Collaborators;
-import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.annotations.Collaborators;
+import fr.communaywen.core.credit.annotations.Credit;
 import fr.communaywen.core.staff.players.PlayersMenu;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;

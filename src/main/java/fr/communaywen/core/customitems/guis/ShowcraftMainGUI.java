@@ -3,7 +3,7 @@ package fr.communaywen.core.customitems.guis;
 import dev.xernas.menulib.PaginatedMenu;
 import dev.xernas.menulib.utils.ItemBuilder;
 import dev.xernas.menulib.utils.StaticSlots;
-import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.annotations.Credit;
 import fr.communaywen.core.customitems.managers.CustomItemsManager;
 import fr.communaywen.core.customitems.objects.CustomItems;
 import fr.communaywen.core.customitems.utils.CustomItemsUtils;

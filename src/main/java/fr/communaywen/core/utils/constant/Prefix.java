@@ -1,7 +1,7 @@
 package fr.communaywen.core.utils.constant;
 
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
+import fr.communaywen.core.credit.annotations.Credit;
+import fr.communaywen.core.credit.annotations.Feature;
 import lombok.Getter;
 
 /**

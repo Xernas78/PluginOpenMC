@@ -66,7 +66,7 @@ public class QuestsMenu extends Menu {
         for (QUESTS quest : QUESTS.values()) {
             ItemStack item = new ItemStack(quest.getMaterial());
             ItemMeta meta = item.getItemMeta();
-            PlayerQuests pq = QuestsManager.getPlayerQuests(getOwner().getPlayer());
+            PlayerQuests pq = QuestsManager.getPlayerQuests(getOwner().getPlayer().getUniqueId());
             if (meta != null) {
                 if (pq.isQuestCompleted(quest)) {
                     meta.addEnchant(Enchantment.SHARPNESS, 5, true);

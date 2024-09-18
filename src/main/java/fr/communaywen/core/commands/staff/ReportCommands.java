@@ -1,9 +1,9 @@
 package fr.communaywen.core.commands.staff;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.credit.annotations.Credit;
+import fr.communaywen.core.credit.annotations.Feature;
 import fr.communaywen.core.staff.report.ReportManager;
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

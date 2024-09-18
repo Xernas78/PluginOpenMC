@@ -3,8 +3,8 @@ package fr.communaywen.core.adminshop.menu.category.defaults;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.adminshop.shopinterfaces.BaseItems;
 import fr.communaywen.core.adminshop.menu.category.ShopType;
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
+import fr.communaywen.core.credit.annotations.Credit;
+import fr.communaywen.core.credit.annotations.Feature;
 import org.bukkit.Material;
 
 @Credit("Axeno")

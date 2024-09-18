@@ -1,4 +1,4 @@
-package fr.communaywen.core.credit;
+package fr.communaywen.core.credit.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

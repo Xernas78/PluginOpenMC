@@ -2,8 +2,8 @@ package fr.communaywen.core.corpse;
 
 import dev.lone.itemsadder.api.CustomBlock;
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
+import fr.communaywen.core.credit.annotations.Credit;
+import fr.communaywen.core.credit.annotations.Feature;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

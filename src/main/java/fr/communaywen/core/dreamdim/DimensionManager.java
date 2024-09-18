@@ -1,9 +1,9 @@
 package fr.communaywen.core.dreamdim;
 
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.credit.Collaborators;
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
+import fr.communaywen.core.credit.annotations.Collaborators;
+import fr.communaywen.core.credit.annotations.Credit;
+import fr.communaywen.core.credit.annotations.Feature;
 import fr.communaywen.core.dreamdim.fishing.FishingListener;
 import org.bukkit.*;
 import org.bukkit.entity.Player;

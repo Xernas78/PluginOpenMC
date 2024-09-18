@@ -1,8 +1,7 @@
 package fr.communaywen.core.luckyblocks.commands;
 
-import dev.lone.itemsadder.api.CustomStack;
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
+import fr.communaywen.core.credit.annotations.Credit;
+import fr.communaywen.core.credit.annotations.Feature;
 import fr.communaywen.core.luckyblocks.managers.LBPlayerManager;
 import fr.communaywen.core.luckyblocks.utils.LBUtils;
 import fr.communaywen.core.utils.constant.MessageManager;

@@ -1,7 +1,7 @@
 package fr.communaywen.core.luckyblocks.listeners;
 
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
+import fr.communaywen.core.credit.annotations.Credit;
+import fr.communaywen.core.credit.annotations.Feature;
 import fr.communaywen.core.luckyblocks.managers.LuckyBlockManager;
 import fr.communaywen.core.luckyblocks.objects.LuckyBlockListeners;
 import org.bukkit.event.EventHandler;

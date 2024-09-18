@@ -3,7 +3,7 @@ package fr.communaywen.core.customitems.guis;
 import dev.xernas.menulib.Menu;
 import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
-import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.annotations.Credit;
 import fr.communaywen.core.customitems.objects.CustomItems;
 import fr.communaywen.core.customitems.utils.CustomItemsUtils;
 import org.bukkit.Material;

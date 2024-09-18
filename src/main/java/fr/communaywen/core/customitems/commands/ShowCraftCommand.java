@@ -1,7 +1,7 @@
 package fr.communaywen.core.customitems.commands;
 
 import dev.xernas.menulib.Menu;
-import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.annotations.Credit;
 import fr.communaywen.core.customitems.guis.ShowcraftMainGUI;
 import fr.communaywen.core.customitems.managers.CustomItemsManager;
 import org.bukkit.entity.Player;

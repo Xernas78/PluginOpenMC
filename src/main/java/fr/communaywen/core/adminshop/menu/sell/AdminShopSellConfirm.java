@@ -6,8 +6,8 @@ import dev.xernas.menulib.utils.ItemBuilder;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.adminshop.menu.category.ShopType;
 import fr.communaywen.core.adminshop.shopinterfaces.BaseItems;
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
+import fr.communaywen.core.credit.annotations.Credit;
+import fr.communaywen.core.credit.annotations.Feature;
 import fr.communaywen.core.economy.EconomyManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -19,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
 @Credit("Axeno")
 @Feature("AdminShop")
 public class AdminShopSellConfirm extends Menu {
@@ -66,7 +67,7 @@ public class AdminShopSellConfirm extends Menu {
             else totalAmount = items.getPrize() * quantity;
 
             removeItemsFromInventory(getOwner(), Material.getMaterial(items.named()), quantity);
-            economy.addBalance(getOwner(), totalAmount);
+            economy.addBalance(getOwner().getUniqueId(), totalAmount);
             getOwner().sendMessage("§aVente confirmée !");
             getOwner().sendMessage("  §4- §c" + quantity + " " + items.getName() + " §7pour §a" + String.format("%.2f", totalAmount) + "$");
 

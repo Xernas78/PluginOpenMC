@@ -15,8 +15,8 @@ import org.bukkit.inventory.ItemStack;
 
 public class CloudBed implements Listener {
     AdvancementRegister register;
-    ItemStack plank = CustomStack.getInstance("aywen:dream_planks").getItemStack();
-    ItemStack cloud = CustomStack.getInstance("aywen:cloud").getItemStack();
+    CustomStack plankStack = CustomStack.getInstance("aywen:dream_planks");
+    CustomStack cloudStack = CustomStack.getInstance("aywen:cloud");
 
     public CloudBed(AdvancementRegister register) {
         /* Accordée quand le joueur fabrique un lit avec des nuages */
@@ -25,6 +25,11 @@ public class CloudBed implements Listener {
 
     @EventHandler
     public void onCraftItem(CraftItemEvent event) {
+        if (plankStack == null || cloudStack == null) {
+            return;
+        }
+        ItemStack plank = plankStack.getItemStack();
+        ItemStack cloud = cloudStack.getItemStack();
         if (event.getRecipe().getResult().getType() == Material.WHITE_BED) {
             CraftingInventory inventory = event.getInventory();
             ItemStack[] matrix = inventory.getMatrix();

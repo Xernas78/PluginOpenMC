@@ -3,9 +3,12 @@ package fr.communaywen.core;
 import fr.communaywen.core.commands.fun.RewardCommand;
 import fr.communaywen.core.commands.randomEvents.RandomEventsData;
 import fr.communaywen.core.contest.ContestManager;
+import fr.communaywen.core.corporation.GuildManager;
+import fr.communaywen.core.corporation.PlayerShopManager;
 import fr.communaywen.core.corpse.CorpseManager;
-import fr.communaywen.core.credit.Credit;
 import fr.communaywen.core.credit.FeatureManager;
+import fr.communaywen.core.credit.annotations.Credit;
+import fr.communaywen.core.credit.annotations.Feature;
 import fr.communaywen.core.dreamdim.AdvancementRegister;
 import fr.communaywen.core.dreamdim.DimensionManager;
 import fr.communaywen.core.customitems.managers.CustomItemsManager;
@@ -32,13 +35,18 @@ import java.io.File;
 import java.sql.SQLException;
 
 @Credit("Xernas")
+@Feature("Opti Managers")
 @Getter
 public class Managers {
 
     private AywenCraftPlugin plugin;
     private ContestManager contestManager;
     private DimensionManager dreamdimManager;
+    // Managers de Xernas
     private TeamManager teamManager;
+    private GuildManager guildManager;
+    private PlayerShopManager playerShopManager;
+    // :)
     private FeatureManager featureManager;
     private FriendsManager friendsManager;
     private CorpseManager corpseManager;
@@ -102,7 +110,6 @@ public class Managers {
 
         dreamdimManager = new DimensionManager(plugin);
         contestManager = new ContestManager(plugin);
-        this.teamManager = new TeamManager(plugin);
         scoreboardManager = new ScoreboardManager(plugin);
         quizManager = new QuizManager(plugin, quizzesConfig);
         economyManager = new EconomyManager(plugin.getDataFolder());
@@ -117,6 +124,9 @@ public class Managers {
         reportManager.loadReports();
         luckyBlockManager = new LuckyBlockManager();
         lbPlayerManager = new LBPlayerManager();
+        this.teamManager = new TeamManager(plugin);
+        this.guildManager = new GuildManager();
+        this.playerShopManager = new PlayerShopManager(economyManager);
 
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));

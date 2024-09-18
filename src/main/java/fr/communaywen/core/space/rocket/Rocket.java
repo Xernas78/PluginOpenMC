@@ -2,9 +2,9 @@ package fr.communaywen.core.space.rocket;
 
 import dev.lone.itemsadder.api.CustomEntity;
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.credit.Collaborators;
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
+import fr.communaywen.core.credit.annotations.Collaborators;
+import fr.communaywen.core.credit.annotations.Credit;
+import fr.communaywen.core.credit.annotations.Feature;
 import fr.communaywen.core.utils.constant.MessageManager;
 import fr.communaywen.core.utils.constant.MessageType;
 import fr.communaywen.core.utils.constant.Prefix;

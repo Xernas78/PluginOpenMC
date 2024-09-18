@@ -1,13 +1,17 @@
 package fr.communaywen.core.teams;
 
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
+import fr.communaywen.core.corporation.Guild;
+import fr.communaywen.core.corporation.GuildManager;
+import fr.communaywen.core.credit.annotations.Credit;
+import fr.communaywen.core.credit.annotations.Feature;
 import fr.communaywen.core.teams.cache.TeamCache;
+import fr.communaywen.core.teams.utils.MethodState;
 import fr.communaywen.core.utils.Queue;
 import fr.communaywen.core.utils.database.DatabaseConnector;
 import fr.communaywen.core.utils.serializer.BukkitSerializer;
 import lombok.Getter;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -92,7 +96,7 @@ public class TeamManager extends DatabaseConnector {
         return team;
     }
 
-    public boolean deleteTeam(Team team) {
+    public MethodState deleteTeam(Team team) {
         int items = 0;
         for (ItemStack item : team.getInventory().getContents()) {
             if (item != null && item.getType() != Material.AIR) {
@@ -100,16 +104,23 @@ public class TeamManager extends DatabaseConnector {
             }
         }
         if (items > 0) {
-            return false;
+            return MethodState.FAILURE;
         }
         teams.remove(team);
         try {
             team.delete();
+            GuildManager guildManager = plugin.getManagers().getGuildManager();
+            Guild guild = guildManager.getGuild(team);
+            if (guild != null) {
+                if (!guildManager.liquidateGuild(guild)) {
+                    return MethodState.ERROR;
+                }
+            }
         } catch (Exception e){
             e.printStackTrace();
             System.out.println("Impossible de supprimer la team '"+team.getName()+"'");
         }
-        return true;
+        return MethodState.SUCCESS;
     }
 
     public boolean isInTeam(UUID player) {

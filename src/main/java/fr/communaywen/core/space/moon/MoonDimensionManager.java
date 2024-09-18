@@ -1,10 +1,9 @@
 package fr.communaywen.core.space.moon;
 
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.credit.Collaborators;
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
-import lombok.Getter;
+import fr.communaywen.core.credit.annotations.Collaborators;
+import fr.communaywen.core.credit.annotations.Credit;
+import fr.communaywen.core.credit.annotations.Feature;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;

@@ -1,10 +1,10 @@
 package fr.communaywen.core.commands.randomEvents;
 
+import fr.communaywen.core.credit.annotations.Credit;
+import fr.communaywen.core.credit.annotations.Feature;
 import org.bukkit.entity.Player;
 
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Description;
 

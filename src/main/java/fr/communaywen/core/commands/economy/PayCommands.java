@@ -1,8 +1,8 @@
 package fr.communaywen.core.commands.economy;
 
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
+import fr.communaywen.core.credit.annotations.Credit;
+import fr.communaywen.core.credit.annotations.Feature;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.utils.Transaction;
 import fr.communaywen.core.utils.database.TransactionsManager;

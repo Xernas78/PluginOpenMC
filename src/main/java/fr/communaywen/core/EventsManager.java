@@ -1,5 +1,7 @@
 package fr.communaywen.core;
 
+import fr.communaywen.core.credit.annotations.Credit;
+import fr.communaywen.core.credit.annotations.Feature;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Color;
@@ -51,8 +53,6 @@ import org.joml.Random;
 import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.commands.randomEvents.EventsDifficulties;
 import fr.communaywen.core.commands.randomEvents.RandomEventsData;
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;

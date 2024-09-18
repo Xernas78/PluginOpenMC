@@ -1,6 +1,6 @@
 package fr.communaywen.core.commands.utils;
 
-import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.annotations.Credit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

@@ -1,6 +1,6 @@
 package fr.communaywen.core.clockinfos.tasks;
 
-import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.annotations.Credit;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;

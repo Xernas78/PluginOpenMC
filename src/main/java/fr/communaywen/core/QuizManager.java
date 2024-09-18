@@ -1,8 +1,8 @@
 package fr.communaywen.core;
 
 import fr.communaywen.core.contest.ContestManager;
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
+import fr.communaywen.core.credit.annotations.Credit;
+import fr.communaywen.core.credit.annotations.Feature;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -111,7 +111,7 @@ public class QuizManager {
         }
 
         event.setCancelled(true);
-        this.plugin.getManagers().getEconomyManager().addBalance(event.getPlayer(), money);
+        this.plugin.getManagers().getEconomyManager().addBalance(event.getPlayer().getUniqueId(), money);
         currentQuiz = null;
         this.timeoutExecutor.shutdownNow();
         this.timeoutExecutor = Executors.newScheduledThreadPool(1);

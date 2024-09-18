@@ -1,8 +1,8 @@
 package fr.communaywen.core.commands.economy;
 
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
+import fr.communaywen.core.credit.annotations.Credit;
+import fr.communaywen.core.credit.annotations.Feature;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.utils.Transaction;
 import fr.communaywen.core.utils.TransactionsMenu;
@@ -34,7 +34,7 @@ public class MoneyCommand {
 
     @DefaultFor("~")
     public void balance(Player player) {
-        player.sendMessage("Balance: " + economyManager.getBalance(player));
+        player.sendMessage("Balance: " + economyManager.getBalance(player.getUniqueId()));
     }
 
     @Subcommand("help")
@@ -87,7 +87,7 @@ public class MoneyCommand {
     @Description("Ajoute de l'argent à un joueur")
     @CommandPermission("openmc.money.add")
     public void add(Player player, @Named("joueur") Player target, @Named("montant") @Range(min = 1) int amount) {
-        economyManager.addBalance(target, amount);
+        economyManager.addBalance(target.getUniqueId(), amount);
         player.sendMessage("§aVous venez d'ajouter §e" + amount + "$ §aà " + target.getName());
         target.sendMessage("§aVous venez de recevoir §e" + amount + "$");
         transactionsManager.addTransaction(new Transaction(
@@ -102,7 +102,7 @@ public class MoneyCommand {
     @Description("Enlève de l'argent à un joueur")
     @CommandPermission("openmc.money.remove")
     public void remove(Player player, @Named("joueur") Player target, @Named("montant") @Range(min = 1) int amount) {
-        economyManager.withdrawBalance(target, amount);
+        economyManager.withdrawBalance(target.getUniqueId(), amount);
         player.sendMessage("§aVous venez d'enlever §e" + amount + "$ §aà " + target.getName());
         target.sendMessage("§aVous venez de perdre §e" + amount + "$");
         transactionsManager.addTransaction(new Transaction(

@@ -1,7 +1,7 @@
 package fr.communaywen.core.commands.credits;
 
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
+import fr.communaywen.core.credit.annotations.Credit;
+import fr.communaywen.core.credit.annotations.Feature;
 import fr.communaywen.core.utils.GitHubAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

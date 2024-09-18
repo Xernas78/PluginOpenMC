@@ -7,6 +7,7 @@ import fr.communaywen.core.utils.database.DatabaseConnector;
 import fr.communaywen.core.utils.database.TransactionsManager;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -50,14 +51,14 @@ public class QuestsManager extends DatabaseConnector {
         playerQuests.put(playerId, pq);
     }
 
-    public static PlayerQuests getPlayerQuests(Player player) {
-        return playerQuests.get(player.getUniqueId());
+    public static PlayerQuests getPlayerQuests(UUID player) {
+        return playerQuests.get(player);
     }
     public static PlayerQuests getPlayerQuestsOffline(OfflinePlayer player) {
         return playerQuests.get(player.getUniqueId());
     }
 
-    public static void manageQuestsPlayer(Player player, QUESTS quest, int amount, String actionBar) {
+    public static void manageQuestsPlayer(UUID player, QUESTS quest, int amount, String actionBar) {
         PlayerQuests pq = getPlayerQuests(player);
 
         if (!pq.isQuestCompleted(quest)) {
@@ -131,12 +132,16 @@ public class QuestsManager extends DatabaseConnector {
         }
     }
 
-    private static void sendActionBar(Player player, QUESTS quest, int progress, String actionBar) {
+    private static void sendActionBar(UUID uuid, QUESTS quest, int progress, String actionBar) {
+        Player player = Bukkit.getPlayer(uuid);
+        if (player == null) return;
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
                 new TextComponent("» §7[§9§lQuêtes§7] §6" + progress + "§l/§6" + quest.getQt() + " " + actionBar));
     }
 
-    private static void completeQuest(Player player, QUESTS quest) {
+    private static void completeQuest(UUID uuid, QUESTS quest) {
+        Player player = Bukkit.getPlayer(uuid);
+        if (player == null) return;
         player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 10, 10);
         player.sendTitle("§6QUETE COMPLETE", "§e" + quest.getName());
         player.sendMessage("» §7[§9§lQuêtes§7] §6Quête complétée: §e" + quest.getName());
@@ -147,7 +152,7 @@ public class QuestsManager extends DatabaseConnector {
                 player.sendMessage("» §7[§9§lQuêtes§7] §6+ " + quest.getRewardsQt() + " " + quest.getRewardsMaterial().getType().name());
                 break;
             case MONEY:
-                AywenCraftPlugin.getInstance().getManagers().getEconomyManager().addBalance(player, quest.getRewardsQt());
+                AywenCraftPlugin.getInstance().getManagers().getEconomyManager().addBalance(uuid, quest.getRewardsQt());
 
 
                 new TransactionsManager().addTransaction(new Transaction(

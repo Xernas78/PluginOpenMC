@@ -139,7 +139,7 @@ public class AdvancementRegister extends DatabaseConnector implements Listener {
                 amount,
                 reason
         ));
-        plugin.getManagers().getEconomyManager().addBalance(recipient, amount);
+        plugin.getManagers().getEconomyManager().addBalance(recipient.getUniqueId(), amount);
     }
 
     /* SAUVEGARDE */

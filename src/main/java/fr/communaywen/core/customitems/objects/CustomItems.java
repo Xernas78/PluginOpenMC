@@ -1,6 +1,6 @@
 package fr.communaywen.core.customitems.objects;
 
-import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.annotations.Credit;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.inventory.ItemStack;

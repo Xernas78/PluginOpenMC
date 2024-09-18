@@ -2,8 +2,11 @@ package fr.communaywen.core.teams.utils;
 
 public enum MethodState {
 
-    VALID,
+    SUCCESS,
     WARNING,
-    INVALID,
+    ERROR,
+    FAILURE,
+    ESCAPE,
+    SPECIAL
 
 }

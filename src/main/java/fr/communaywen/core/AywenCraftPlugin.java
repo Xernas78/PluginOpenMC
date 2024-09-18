@@ -33,6 +33,9 @@ import fr.communaywen.core.commands.utils.*;
 import fr.communaywen.core.contest.ContestIntractEvents;
 import fr.communaywen.core.contest.ContestListener;
 import fr.communaywen.core.contest.FirerocketSpawnListener;
+import fr.communaywen.core.corporation.commands.GuildCommand;
+import fr.communaywen.core.corporation.commands.ShopCommand;
+import fr.communaywen.core.corporation.listener.ShopListener;
 import fr.communaywen.core.customitems.commands.ShowCraftCommand;
 import fr.communaywen.core.customitems.listeners.CIBreakBlockListener;
 import fr.communaywen.core.customitems.listeners.CIEnchantListener;
@@ -100,6 +103,11 @@ import java.util.*;
 public final class AywenCraftPlugin extends JavaPlugin {
     public static ArrayList<Player> frozenPlayers = new ArrayList<>();
     public static ArrayList<Player> playerClaimsByPass = new ArrayList<>();
+
+    public static NamespacedKey GUILD_SHOP_KEY;
+    public static NamespacedKey PLAYER_SHOP_KEY;
+    public static NamespacedKey SUPPLIER_KEY;
+
     @Getter
     private static AywenCraftPlugin instance;
     @Getter
@@ -138,6 +146,10 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         // Gardez les au début sinon ça pète tout
         instance = this;
+
+        GUILD_SHOP_KEY = new NamespacedKey(this, "shop_guild");
+        PLAYER_SHOP_KEY = new NamespacedKey(this, "shop_player");
+        SUPPLIER_KEY = new NamespacedKey(this, "supplier");
 
         RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
         if (provider != null) {
@@ -222,6 +234,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new QuestsCommands(),
                 new RewardCommand(this),
                 new FeatureCommand(managers.getFeatureManager()),
+                new GuildCommand(managers.getGuildManager(), managers.getTeamManager(), managers.getEconomyManager(), managers.getPlayerShopManager()),
+                new ShopCommand(managers.getGuildManager(), managers.getPlayerShopManager()),
                 new MineCommand(),
                 new AdminShopCommand(),
                 new PayCommands(),
@@ -290,7 +304,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new ChunkListManager(),
                 new LBBlockBreakListener(managers.getLuckyBlockManager()),
                 new LBPlayerQuitListener(managers.getLuckyBlockManager()),
-                new LBPlayerInteractListener(managers.getLuckyBlockManager())
+                new LBPlayerInteractListener(managers.getLuckyBlockManager()),
+                new ShopListener(managers.getGuildManager(), managers.getPlayerShopManager())
         );
 
         getServer().getPluginManager().registerEvents(eventsManager, this); // TODO: refactor
@@ -318,7 +333,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
     public void onDisable() {
         for (Player player : Bukkit.getOnlinePlayers()) {
             for (QUESTS quests : QUESTS.values()) {
-                PlayerQuests pq = QuestsManager.getPlayerQuests(player); // Load quest progress
+                PlayerQuests pq = QuestsManager.getPlayerQuests(player.getUniqueId()); // Load quest progress
                 QuestsManager.savePlayerQuestProgress(player, quests, pq.getProgress(quests)); // Save quest progress
                 player.closeInventory(); // Close inventory
             }

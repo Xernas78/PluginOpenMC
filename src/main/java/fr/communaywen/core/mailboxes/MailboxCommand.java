@@ -1,6 +1,6 @@
 package fr.communaywen.core.mailboxes;
 
-import fr.communaywen.core.credit.Credit;
+import fr.communaywen.core.credit.annotations.Credit;
 import fr.communaywen.core.mailboxes.letter.LetterHead;
 import fr.communaywen.core.mailboxes.menu.HomeMailbox;
 import fr.communaywen.core.mailboxes.menu.PendingMailbox;

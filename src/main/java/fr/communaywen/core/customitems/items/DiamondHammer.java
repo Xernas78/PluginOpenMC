@@ -2,8 +2,8 @@ package fr.communaywen.core.customitems.items;
 
 import dev.lone.itemsadder.api.CustomStack;
 import dev.lone.itemsadder.api.CustomBlock;
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
+import fr.communaywen.core.credit.annotations.Credit;
+import fr.communaywen.core.credit.annotations.Feature;
 import fr.communaywen.core.customitems.objects.CustomItems;
 import fr.communaywen.core.customitems.objects.CustomItemsEvents;
 import fr.communaywen.core.customitems.utils.CustomItemsUtils;

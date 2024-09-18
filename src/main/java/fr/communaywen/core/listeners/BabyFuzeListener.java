@@ -2,8 +2,8 @@ package fr.communaywen.core.listeners;
 
 import dev.lone.itemsadder.api.CustomEntity;
 import dev.lone.itemsadder.api.Events.CustomEntityDeathEvent;
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
+import fr.communaywen.core.credit.annotations.Credit;
+import fr.communaywen.core.credit.annotations.Feature;
 import fr.communaywen.core.utils.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;

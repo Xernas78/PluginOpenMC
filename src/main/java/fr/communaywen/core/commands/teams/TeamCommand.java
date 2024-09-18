@@ -2,8 +2,6 @@ package fr.communaywen.core.commands.teams;
 
 import dev.xernas.menulib.Menu;
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.claim.ClaimListener;
-import fr.communaywen.core.claim.ClaimMenu;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.teams.EconomieTeam;
 import fr.communaywen.core.teams.Team;
@@ -13,9 +11,6 @@ import fr.communaywen.core.teams.menu.TeamMenu;
 import fr.communaywen.core.teams.utils.MethodState;
 import fr.communaywen.core.teams.utils.TeamUtils;
 import fr.communaywen.core.utils.CommandUtils;
-import fr.communaywen.core.utils.constant.MessageManager;
-import fr.communaywen.core.utils.constant.MessageType;
-import fr.communaywen.core.utils.constant.Prefix;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -173,15 +168,19 @@ public class TeamCommand {
         }
         UUID targetUUID = target.getUniqueId();
         MethodState state = team.removePlayer(targetUUID);
-        if (state == MethodState.VALID || state == MethodState.WARNING)
+        if (state == MethodState.SUCCESS || state == MethodState.WARNING)
             CommandUtils.sendMessage(player, "Le joueur " + target.getName() + " a été kické de la team !", false);
-        if (state == MethodState.INVALID) {
+        if (state == MethodState.ERROR) {
             CommandUtils.sendMessage(player, ChatColor.DARK_RED + "Impossible de kick, la team serait supprimée et il reste des items dans l'inventaire !", true);
+            return;
+        }
+        if (state == MethodState.SPECIAL) {
+            CommandUtils.sendMessage(player, ChatColor.DARK_RED + "Impossible de kick, la team serait supprimée mais elle possède une guilde, si l'erreur persiste veuillez contacter un admin, modo ou manager !", true);
             return;
         }
         if (state == MethodState.WARNING)
             CommandUtils.sendMessage(player, ChatColor.DARK_RED + "La team a été supprimée !", false);
-        if (state == MethodState.VALID) {
+        if (state == MethodState.SUCCESS) {
             CommandUtils.sendMessage(target, ChatColor.DARK_RED + "Vous avez été kické de la team !", false);
         }
     }
@@ -237,8 +236,8 @@ public class TeamCommand {
         }
         EconomyManager economyManager = AywenCraftPlugin.getInstance().getManagers().getEconomyManager();
 
-        if(amount > 0 && economyManager.getBalance(player) >= amount) {
-            AywenCraftPlugin.getInstance().getManagers().getEconomyManager().withdrawBalance(player, amount);
+        if(amount > 0 && economyManager.getBalance(player.getUniqueId()) >= amount) {
+            AywenCraftPlugin.getInstance().getManagers().getEconomyManager().withdrawBalance(player.getUniqueId(), amount);
             EconomieTeam.addBalance(team.getName(), amount);
             player.sendMessage("§aVous venez de transférer §e" + amount + "$ §adans la banque de votre team.");
         } else {
@@ -256,7 +255,7 @@ public class TeamCommand {
         }
         double balances = EconomieTeam.getTeamBalances(team.getName());
         if(balances >= amount && amount > 0) {
-            AywenCraftPlugin.getInstance().getManagers().getEconomyManager().addBalance(player, amount);
+            AywenCraftPlugin.getInstance().getManagers().getEconomyManager().addBalance(player.getUniqueId(), amount);
             EconomieTeam.removeBalance(team.getName(), amount);
             player.sendMessage("§aVous venez de prendre §e" + amount + "$ §ade la banque de votre team.");
         } else {

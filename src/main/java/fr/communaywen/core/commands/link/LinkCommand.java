@@ -1,8 +1,8 @@
 package fr.communaywen.core.commands.link;
 
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
+import fr.communaywen.core.credit.annotations.Credit;
+import fr.communaywen.core.credit.annotations.Feature;
 import fr.communaywen.core.utils.LinkerAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

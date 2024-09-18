@@ -1,7 +1,9 @@
 package fr.communaywen.core.credit;
 
+import fr.communaywen.core.credit.annotations.Collaborators;
+import fr.communaywen.core.credit.annotations.Credit;
+import fr.communaywen.core.credit.annotations.Feature;
 import lombok.Getter;
-import org.bukkit.entity.Player;
 import org.reflections.Reflections;
 
 import java.util.ArrayList;

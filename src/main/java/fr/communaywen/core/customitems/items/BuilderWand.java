@@ -2,8 +2,8 @@ package fr.communaywen.core.customitems.items;
 
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.claim.RegionManager;
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
+import fr.communaywen.core.credit.annotations.Credit;
+import fr.communaywen.core.credit.annotations.Feature;
 import fr.communaywen.core.customitems.enums.ConfigNames;
 import fr.communaywen.core.customitems.objects.CustomItems;
 import fr.communaywen.core.customitems.objects.CustomItemsEvents;

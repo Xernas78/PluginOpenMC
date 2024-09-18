@@ -1,8 +1,11 @@
 package fr.communaywen.core.commands.teams;
 
 import fr.communaywen.core.AywenCraftPlugin;
+import fr.communaywen.core.corporation.Guild;
+import fr.communaywen.core.corporation.GuildManager;
 import fr.communaywen.core.teams.Team;
 import fr.communaywen.core.teams.TeamManager;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -48,6 +51,7 @@ public class TeamAdminCommand {
 
         Team team = teamManager.getTeamByName(teamName);
         teamManager.deleteTeam(team);
+
         sender.sendMessage("§aL'équipe '"+team.getName()+"' a bien été supprimée.");
     }
 

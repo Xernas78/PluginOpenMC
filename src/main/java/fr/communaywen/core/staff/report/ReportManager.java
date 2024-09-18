@@ -1,8 +1,8 @@
 package fr.communaywen.core.staff.report;
 
+import fr.communaywen.core.credit.annotations.Credit;
+import fr.communaywen.core.credit.annotations.Feature;
 import fr.communaywen.core.utils.database.DatabaseConnector;
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
