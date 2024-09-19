@@ -2,6 +2,7 @@ package fr.communaywen.core.commands.credits;
 
 import fr.communaywen.core.credit.FeatureData;
 import fr.communaywen.core.credit.FeatureManager;
+import fr.communaywen.core.credit.menus.FeatureListMenu;
 import fr.communaywen.core.utils.CommandUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -29,10 +30,9 @@ public class FeatureCommand {
     @Subcommand("get")
     @Description("Get information about a feature")
     public void getFeature(Player player, @Named("feature") String feature) {
-        CommandUtils.setSender(player);
         FeatureData featureData = featureManager.getFeature(feature);
         if (featureData == null) {
-            CommandUtils.sendMessage(player, "Cette feature n'existe pas", true);
+            player.sendMessage( ChatColor.RED + "Cette feature n'existe pas");
             return;
         }
         sendFeatureInfo(player, featureData);
@@ -41,49 +41,48 @@ public class FeatureCommand {
     @Subcommand("list")
     @Description("List all features")
     public void listFeatures(Player player) {
-        CommandUtils.setSender(player);
         List<FeatureData> features = featureManager.getFeatures();
         for (FeatureData feature : features) {
             sendFeatureInfo(player, feature);
         }
     }
 
-    @Subcommand("player")
+    @Subcommand("dev")
     @Description("List all features of a player")
-    public void playerFeatures(Player player, @Named("player") String target) {
-        CommandUtils.setSender(player);
-        CommandUtils.sendMessage(ChatColor.GOLD, "=====================", true);
-        CommandUtils.sendMessage(ChatColor.GOLD, "Features de " + ChatColor.LIGHT_PURPLE + target + " :", true);
+    public void devFeatures(Player player, @Named("dev") String target) {
+        player.sendMessage(ChatColor.GOLD + "=====================");
+        player.sendMessage(ChatColor.GOLD + "Features de " + ChatColor.LIGHT_PURPLE + target + " :");
         for (FeatureData feature : featureManager.getFeatures()) {
-            List<FeatureData> playerFeatures = new ArrayList<>();
+            List<FeatureData> devFeatures = new ArrayList<>();
+            List<FeatureData> collabFeatures = new ArrayList<>();
             if (isDeveloper(target, feature)) {
-                playerFeatures.add(feature);
+                devFeatures.add(feature);
             }
             if (isCollaborator(target, feature)) {
-                playerFeatures.add(feature);
+                collabFeatures.add(feature);
             }
-            Collections.shuffle(playerFeatures);
-            for (FeatureData playerFeature : playerFeatures) {
-                if (isDeveloper(target, playerFeature)) {
-                    CommandUtils.sendMessage(ChatColor.LIGHT_PURPLE, "DEV - " + playerFeature.getFeature(), true);
-                } else {
-                    CommandUtils.sendMessage(ChatColor.GRAY, "COL - " + playerFeature.getFeature(), false);
-                }
+            Collections.shuffle(devFeatures);
+            Collections.shuffle(collabFeatures);
+            for (FeatureData playerFeature : removeIdenticalFeatures(devFeatures)) {
+                player.sendMessage(ChatColor.LIGHT_PURPLE + "DEV - " + playerFeature.getFeature());
+            }
+            for (FeatureData playerFeature : removeIdenticalFeatures(collabFeatures)) {
+                player.sendMessage(ChatColor.GRAY + "COL - " + playerFeature.getFeature());
             }
         }
     }
 
     private void sendFeatureInfo(Player player, FeatureData feature) {
-        CommandUtils.sendMessage(ChatColor.GOLD, "=====================", true);
-        CommandUtils.sendMessage(ChatColor.GOLD, "Feature : " + feature.getFeature(), true);
-        CommandUtils.sendMessage(ChatColor.GOLD, "Par :", true);
+        player.sendMessage(ChatColor.GOLD + "=====================");
+        player.sendMessage(ChatColor.GOLD + "Feature : " + feature.getFeature());
+        player.sendMessage(ChatColor.GOLD + "Par :");
         for (String credit : feature.getDevelopers()) {
-            CommandUtils.sendMessage(ChatColor.LIGHT_PURPLE, " - " + credit, true);
+            player.sendMessage(ChatColor.LIGHT_PURPLE + " - " + credit);
         }
         if (feature.getCollaborators() != null) {
-            CommandUtils.sendMessage(ChatColor.GRAY, "Mentions spéciales : ", false);
+            player.sendMessage(ChatColor.GRAY + "Mentions spéciales : ");
             for (String collaborator : feature.getCollaborators()) {
-                CommandUtils.sendMessage(ChatColor.GRAY, collaborator, false);
+                player.sendMessage(ChatColor.GRAY + collaborator);
             }
         }
     }
@@ -107,6 +106,22 @@ public class FeatureCommand {
             }
         }
         return false;
+    }
+
+    private List<FeatureData> removeIdenticalFeatures(List<FeatureData> featureData) {
+        List<FeatureData> features = new ArrayList<>();
+        for (int i = 0; i < featureData.size(); i++) {
+            FeatureData feature = featureData.get(i);
+            if (i >= features.size()) {
+                features.add(feature);
+                continue;
+            }
+            FeatureData newFeature = features.get(i);
+            if (!newFeature.getFeature().equalsIgnoreCase(feature.getFeature())) {
+                features.add(feature);
+            }
+        }
+        return features;
     }
 
 }

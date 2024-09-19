@@ -65,7 +65,7 @@ public class TeamListMenu extends PaginatedMenu {
                         ChatColor.GRAY + "■ Membres: " + team.getPlayers().size(),
                         ChatColor.GRAY + "■ Cliquez pour voir les détails"
                 ));
-            });
+            }).setNextMenu(new TeamMenu(getOwner(), team, true));
         });
     }
 

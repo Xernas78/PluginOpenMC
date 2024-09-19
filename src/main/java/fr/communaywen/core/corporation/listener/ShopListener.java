@@ -8,6 +8,8 @@ import fr.communaywen.core.corporation.menu.ShopMenu;
 import org.bukkit.Material;
 import org.bukkit.block.Barrel;
 import org.bukkit.block.Sign;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -86,6 +88,8 @@ public class ShopListener implements Listener {
     public void onInventoryClick(InventoryClickEvent event) {
         Inventory topInventory = event.getView().getTopInventory();
 
+        debugItemStack(event.getCurrentItem(), event.getWhoClicked());
+
         if (topInventory.getType() == InventoryType.BARREL) {
             if (event.getSlotType() == InventoryType.SlotType.CONTAINER) {
                 if (!event.isShiftClick() || !event.isLeftClick()) {
@@ -93,7 +97,7 @@ public class ShopListener implements Listener {
                 }
                 ItemStack cursorItem = event.getCursor();
 
-                if (cursorItem != null && cursorItem.getType() != Material.AIR) {
+                if (cursorItem.getType() != Material.AIR) {
                     ItemMeta itemMeta = cursorItem.getItemMeta();
                     if (itemMeta == null) {
                         return;
@@ -110,6 +114,8 @@ public class ShopListener implements Listener {
     public void onInventoryDrag(InventoryDragEvent event) {
         Inventory topInventory = event.getView().getTopInventory();
 
+        debugItemStack(event.getCursor(), event.getWhoClicked());
+
         if (topInventory.getType() == InventoryType.BARREL) {
             for (int slot : event.getRawSlots()) {
                 if (slot < topInventory.getSize()) {
@@ -122,12 +128,25 @@ public class ShopListener implements Listener {
                         }
                         itemMeta.getPersistentDataContainer().set(AywenCraftPlugin.SUPPLIER_KEY, PersistentDataType.STRING, event.getWhoClicked().getUniqueId().toString());
                         draggedItem.setItemMeta(itemMeta);
-
                         event.setCursor(draggedItem);
                         break;
                     }
                 }
             }
+        }
+    }
+
+    private void debugItemStack(ItemStack itemStack, CommandSender sender) {
+        if (itemStack != null && itemStack.getType() != Material.AIR) {
+            sender.sendMessage("Item: " + itemStack.getType());
+            sender.sendMessage("Amount: " + itemStack.getAmount());
+            ItemMeta meta = itemStack.getItemMeta();
+            if (meta != null) {
+                sender.sendMessage("Display Name: " + meta.getDisplayName());
+                sender.sendMessage("Lore: " + meta.getLore());
+            }
+            String supplier = meta.getPersistentDataContainer().get(AywenCraftPlugin.SUPPLIER_KEY, PersistentDataType.STRING);
+            sender.sendMessage("Supplier: " + supplier);
         }
     }
 }

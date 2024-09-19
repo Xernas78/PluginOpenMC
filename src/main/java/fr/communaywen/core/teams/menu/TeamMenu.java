@@ -93,17 +93,18 @@ public class TeamMenu extends Menu {
             playerNames.put(lastPlayer, Bukkit.getOfflinePlayer(lastPlayer).getName());
         }
 
-        Bukkit.getScheduler().runTaskAsynchronously(AywenCraftPlugin.getInstance(), ()->{
-            fillPlayerSlots(content, 10, firstSixPlayers, playerNames);
-            fillPlayerSlots(content, 12, secondSixPlayers, playerNames);
-            fillPlayerSlots(content, 15, thirdFivePlayers, playerNames);
-            if (lastPlayer != null) {
-                content.put(40, new ItemBuilder(this, ItemUtils.getPlayerSkull(lastPlayer), itemMeta ->
-                        itemMeta.setDisplayName(ChatColor.GREEN + playerNames.get(lastPlayer))
-                ));
-            }
+        fillPlayerSlots(content, 10, firstSixPlayers, playerNames);
+        fillPlayerSlots(content, 12, secondSixPlayers, playerNames);
+        fillPlayerSlots(content, 15, thirdFivePlayers, playerNames);
+        if (lastPlayer != null) {
+            content.put(40, new ItemBuilder(this, ItemUtils.getPlayerSkull(lastPlayer), itemMeta ->
+                    itemMeta.setDisplayName(ChatColor.GREEN + playerNames.get(lastPlayer))
+            ));
+        }
 
-        });
+        getOwner().sendMessage("§a" + team.getPlayers().size());
+        getOwner().sendMessage("§a" + content.size());
+
         return content;
     }
 

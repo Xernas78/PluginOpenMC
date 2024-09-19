@@ -27,7 +27,9 @@ public class FeatureManager {
             }
             Collaborators collaborators = clazz.getAnnotation(Collaborators.class);
             if (collaborators == null) features.add(new FeatureData(feature.value(), credit.value()));
-            else features.add(new FeatureData(feature.value(), credit.value(), collaborators.value()));
+            else {
+                features.add(new FeatureData(feature.value(), credit.value(), collaborators.value()));
+            }
         }
     }
 
