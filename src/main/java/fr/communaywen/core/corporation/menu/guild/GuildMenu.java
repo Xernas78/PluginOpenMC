@@ -1,4 +1,4 @@
-package fr.communaywen.core.corporation.menu;
+package fr.communaywen.core.corporation.menu.guild;
 
 import dev.xernas.menulib.PaginatedMenu;
 import dev.xernas.menulib.utils.ItemBuilder;

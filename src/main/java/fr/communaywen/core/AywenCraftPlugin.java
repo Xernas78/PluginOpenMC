@@ -33,6 +33,7 @@ import fr.communaywen.core.commands.utils.*;
 import fr.communaywen.core.contest.ContestIntractEvents;
 import fr.communaywen.core.contest.ContestListener;
 import fr.communaywen.core.contest.FirerocketSpawnListener;
+import fr.communaywen.core.corporation.Shop;
 import fr.communaywen.core.corporation.commands.GuildCommand;
 import fr.communaywen.core.corporation.commands.ShopCommand;
 import fr.communaywen.core.corporation.listener.ShopListener;
@@ -82,9 +83,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
@@ -260,6 +263,23 @@ public final class AywenCraftPlugin extends JavaPlugin {
                     if (openedMenu != null) {
                         openedMenu.open();
                     }
+                    ItemStack[] items = player.getInventory().getContents();
+
+                    for (int i = 0; i < items.length; i++) {
+                        ItemStack item = items[i];
+                        if (item != null) {
+                            ItemMeta meta = item.getItemMeta();
+                            if (meta != null) {
+                                meta.getPersistentDataContainer().set(SUPPLIER_KEY, PersistentDataType.STRING, player.getUniqueId().toString());
+                                item.setItemMeta(meta);
+                                player.getInventory().setItem(i, item);
+                            }
+                        }
+                    }
+                }
+                List<Shop> allShops = Shop.getAllShops(managers.getGuildManager(), managers.getPlayerShopManager());
+                for (Shop shop : allShops) {
+                    shop.checkStock();
                 }
             }
         }.runTaskTimer(this, 0L, 100L);

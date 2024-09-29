@@ -1,8 +1,8 @@
 package fr.communaywen.core.corporation.commands;
 
 import fr.communaywen.core.corporation.*;
-import fr.communaywen.core.corporation.menu.ShopManageMenu;
-import fr.communaywen.core.corporation.menu.ShopMenu;
+import fr.communaywen.core.corporation.menu.guild.ShopManageMenu;
+import fr.communaywen.core.corporation.menu.shop.ShopMenu;
 import fr.communaywen.core.credit.annotations.Credit;
 import fr.communaywen.core.credit.annotations.Feature;
 import fr.communaywen.core.teams.utils.MethodState;
@@ -149,13 +149,19 @@ public class ShopCommand {
                 player.sendMessage(ChatColor.RED + "Cet item n'est pas dans le shop");
                 return;
             }
-            ShopItem item = shop.getItem(shop.getItems().get(itemIndex - 1));
+            ShopItem item = shop.getItem(itemIndex - 1);
             if (item == null) {
                 player.sendMessage(ChatColor.RED + "Cet item n'est pas dans le shop");
                 return;
             }
             shop.removeItem(item);
             player.sendMessage(ChatColor.GREEN + "L'item a bien été retiré du shop !");
+            if (item.getAmount() > 0) {
+                ItemStack toGive = item.getItem().clone();
+                toGive.setAmount(item.getAmount());
+                player.getInventory().addItem(toGive);
+                player.sendMessage(ChatColor.GOLD + "Vous avez récupéré le stock restant de cet item");
+            }
             return;
         }
         if (!playerShopManager.hasShop(player.getUniqueId())) {
@@ -163,13 +169,19 @@ public class ShopCommand {
             return;
         }
         Shop shop = playerShopManager.getShop(player.getUniqueId());
-        ShopItem item = shop.getItem(shop.getItems().get(itemIndex - 1));
+        ShopItem item = shop.getItem(itemIndex - 1);
         if (item == null) {
             player.sendMessage(ChatColor.RED + "Cet item n'est pas dans le shop");
             return;
         }
         shop.removeItem(item);
         player.sendMessage(ChatColor.GREEN + "L'item a bien été retiré du shop !");
+        if (item.getAmount() > 0) {
+            ItemStack toGive = item.getItem().clone();
+            toGive.setAmount(item.getAmount());
+            player.getInventory().addItem(toGive);
+            player.sendMessage(ChatColor.GOLD + "Vous avez récupéré le stock restant de cet item");
+        }
     }
 
     @Subcommand("delete")

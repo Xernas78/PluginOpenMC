@@ -19,7 +19,10 @@ import org.bukkit.block.Sign;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.*;
@@ -49,6 +52,38 @@ public class Shop {
         this.economyManager = economyManager;
     }
 
+    public void checkStock() {
+        Block stockBlock = getStockBlock();
+        if (stockBlock == null || stockBlock.getType() != Material.BARREL) {
+            removeShop();
+            return;
+        }
+        if (stockBlock.getState() instanceof Barrel barrel) {
+            if (!barrel.getPersistentDataContainer().has(owner.isGuild() ? AywenCraftPlugin.GUILD_SHOP_KEY : AywenCraftPlugin.PLAYER_SHOP_KEY, PersistentDataType.STRING)) {
+                removeShop();
+            }
+            Inventory inventory = barrel.getInventory();
+            for (ItemStack item : inventory.getContents()) {
+                if (item == null || item.getType() == Material.AIR) {
+                    continue;
+                }
+                ItemMeta itemMeta = item.getItemMeta();
+                if (itemMeta == null) {
+                    continue;
+                }
+                PersistentDataContainer dataContainer = itemMeta.getPersistentDataContainer();
+                if (dataContainer.has(AywenCraftPlugin.SUPPLIER_KEY, PersistentDataType.STRING)) {
+                    String supplierUUID = dataContainer.get(AywenCraftPlugin.SUPPLIER_KEY, PersistentDataType.STRING);
+                    if (supplierUUID == null) {
+                        continue;
+                    }
+                    boolean supplied = supply(item, UUID.fromString(supplierUUID));
+                    if (supplied) inventory.remove(item);
+                }
+            }
+        }
+    }
+
     public String getName() {
         return owner.isGuild() ? ("Shop #" + index) : Bukkit.getOfflinePlayer(owner.getPlayer()).getName() + "'s Shop";
     }
@@ -75,26 +110,23 @@ public class Shop {
         return false;
     }
 
-    public ShopItem getItem(ShopItem shopItem) {
-        for (ShopItem item : items) {
-            if (item.equals(shopItem)) {
-                return item;
-            }
-        }
-        return null;
+    public ShopItem getItem(int index) {
+        return items.get(index);
     }
 
     public void removeItem(ShopItem item) {
         items.remove(item);
     }
 
-    public void supply(ItemStack item, UUID supplier) {
+    public boolean supply(ItemStack item, UUID supplier) {
         for (ShopItem shopItem : items) {
             if (shopItem.getItem().isSimilar(item)) {
                 shopItem.setAmount(shopItem.getAmount() + item.getAmount());
                 suppliers.put(shopItem.getItemID(), supplier);
+                return true;
             }
         }
+        return false;
     }
 
     public MethodState buy(ShopItem item, int amount, Player buyer) {
@@ -104,6 +136,10 @@ public class Shop {
         if (amount > item.getAmount()) {
             return MethodState.WARNING;
         }
+        //TODO Remettre ça
+//        if (isOwner(buyer.getUniqueId())) {
+//            return MethodState.FAILURE;
+//        }
         item.setAmount(item.getAmount() - amount);
         turnover += item.getPrice(amount);
         if (owner.isGuild()) {
@@ -122,11 +158,10 @@ public class Shop {
             economyManager.addBalance(owner.getPlayer(), item.getPrice(amount));
         }
         //TODO Give certain amount of that item to the buyer
-        buyer.getInventory().addItem(item.getItem());
+        ItemStack toGive = item.getItem().clone();
+        toGive.setAmount(amount);
+        buyer.getInventory().addItem(toGive);
         sales.add(item.copy().setAmount(amount));
-        if (item.getAmount() == 0) {
-            items.remove(item);
-        }
         return MethodState.SUCCESS;
     }
 
@@ -169,11 +204,17 @@ public class Shop {
 
     public static UUID getShopPlayerLookingAt(Player player, boolean isGuild) {
         Block targetBlock = player.getTargetBlockExact(5);
-        if (targetBlock == null || targetBlock.getType() != Material.BARREL) {
+        //TODO ItemsAdder cash register
+        if (targetBlock == null || (targetBlock.getType() != Material.BARREL && targetBlock.getType() != Material.OAK_SIGN)) {
             return null;
         }
-        Barrel barrel = (Barrel) targetBlock.getState();
-        String shopUUID = barrel.getPersistentDataContainer().get(isGuild ? AywenCraftPlugin.GUILD_SHOP_KEY : AywenCraftPlugin.PLAYER_SHOP_KEY, PersistentDataType.STRING);
+        String shopUUID = null;
+        if (targetBlock.getState() instanceof Barrel barrel) {
+            shopUUID = barrel.getPersistentDataContainer().get(isGuild ? AywenCraftPlugin.GUILD_SHOP_KEY : AywenCraftPlugin.PLAYER_SHOP_KEY, PersistentDataType.STRING);
+        }
+        else if (targetBlock.getState() instanceof Sign sign) {
+            shopUUID = sign.getPersistentDataContainer().get(isGuild ? AywenCraftPlugin.GUILD_SHOP_KEY : AywenCraftPlugin.PLAYER_SHOP_KEY, PersistentDataType.STRING);
+        }
         if (shopUUID == null) {
             return null;
         }
@@ -220,6 +261,15 @@ public class Shop {
         }
         barrel.update();
         return true;
+    }
+
+    public static List<Shop> getAllShops(GuildManager guildManager, PlayerShopManager playerShopManager) {
+        List<Shop> shops = new ArrayList<>();
+        for (Guild guild : guildManager.getGuilds()) {
+            shops.addAll(guild.getShops());
+        }
+        shops.addAll(playerShopManager.getPlayerShops().values());
+        return shops;
     }
 
 }

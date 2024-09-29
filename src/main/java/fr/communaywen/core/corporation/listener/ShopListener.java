@@ -4,23 +4,14 @@ import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.corporation.GuildManager;
 import fr.communaywen.core.corporation.PlayerShopManager;
 import fr.communaywen.core.corporation.Shop;
-import fr.communaywen.core.corporation.menu.ShopMenu;
-import org.bukkit.Material;
+import fr.communaywen.core.corporation.menu.shop.ShopMenu;
 import org.bukkit.block.Barrel;
 import org.bukkit.block.Sign;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.Objects;
@@ -81,72 +72,6 @@ public class ShopListener implements Listener {
             event.setCancelled(true);
             ShopMenu menu = new ShopMenu(event.getPlayer(), guildManager, playerShopManager, shop, 0);
             menu.open();
-        }
-    }
-
-    @EventHandler
-    public void onInventoryClick(InventoryClickEvent event) {
-        Inventory topInventory = event.getView().getTopInventory();
-
-        debugItemStack(event.getCurrentItem(), event.getWhoClicked());
-
-        if (topInventory.getType() == InventoryType.BARREL) {
-            if (event.getSlotType() == InventoryType.SlotType.CONTAINER) {
-                if (!event.isShiftClick() || !event.isLeftClick()) {
-                    return;
-                }
-                ItemStack cursorItem = event.getCursor();
-
-                if (cursorItem.getType() != Material.AIR) {
-                    ItemMeta itemMeta = cursorItem.getItemMeta();
-                    if (itemMeta == null) {
-                        return;
-                    }
-                    itemMeta.getPersistentDataContainer().set(AywenCraftPlugin.SUPPLIER_KEY, PersistentDataType.STRING, event.getWhoClicked().getUniqueId().toString());
-                    cursorItem.setItemMeta(itemMeta);
-                    event.setCursor(cursorItem);
-                }
-            }
-        }
-    }
-
-    @EventHandler
-    public void onInventoryDrag(InventoryDragEvent event) {
-        Inventory topInventory = event.getView().getTopInventory();
-
-        debugItemStack(event.getCursor(), event.getWhoClicked());
-
-        if (topInventory.getType() == InventoryType.BARREL) {
-            for (int slot : event.getRawSlots()) {
-                if (slot < topInventory.getSize()) {
-                    ItemStack draggedItem = event.getOldCursor();
-
-                    if (draggedItem.getType() != Material.AIR) {
-                        ItemMeta itemMeta = draggedItem.getItemMeta();
-                        if (itemMeta == null) {
-                            return;
-                        }
-                        itemMeta.getPersistentDataContainer().set(AywenCraftPlugin.SUPPLIER_KEY, PersistentDataType.STRING, event.getWhoClicked().getUniqueId().toString());
-                        draggedItem.setItemMeta(itemMeta);
-                        event.setCursor(draggedItem);
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
-    private void debugItemStack(ItemStack itemStack, CommandSender sender) {
-        if (itemStack != null && itemStack.getType() != Material.AIR) {
-            sender.sendMessage("Item: " + itemStack.getType());
-            sender.sendMessage("Amount: " + itemStack.getAmount());
-            ItemMeta meta = itemStack.getItemMeta();
-            if (meta != null) {
-                sender.sendMessage("Display Name: " + meta.getDisplayName());
-                sender.sendMessage("Lore: " + meta.getLore());
-            }
-            String supplier = meta.getPersistentDataContainer().get(AywenCraftPlugin.SUPPLIER_KEY, PersistentDataType.STRING);
-            sender.sendMessage("Supplier: " + supplier);
         }
     }
 }

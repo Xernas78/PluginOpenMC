@@ -1,12 +1,13 @@
-package fr.communaywen.core.corporation.menu;
+package fr.communaywen.core.corporation.menu.guild;
 
 import dev.xernas.menulib.PaginatedMenu;
 import dev.xernas.menulib.utils.ItemBuilder;
 import dev.xernas.menulib.utils.StaticSlots;
 import fr.communaywen.core.corporation.Guild;
-import fr.communaywen.core.corporation.data.TransactionData;
-import fr.communaywen.core.economy.EconomyManager;
-import org.bukkit.Bukkit;
+import fr.communaywen.core.corporation.GuildManager;
+import fr.communaywen.core.corporation.PlayerShopManager;
+import fr.communaywen.core.corporation.Shop;
+import fr.communaywen.core.corporation.menu.shop.ShopMenu;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -15,19 +16,22 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GuildBankTransactionsMenu extends PaginatedMenu {
+public class ShopManageMenu extends PaginatedMenu {
 
     private final Guild guild;
+    private final GuildManager guildManager;
+    private final PlayerShopManager playerShopManager;
 
-    public GuildBankTransactionsMenu(Player owner, Guild guild) {
+    public ShopManageMenu(Player owner, Guild guild, GuildManager guildManager, PlayerShopManager playerShopManager) {
         super(owner);
         this.guild = guild;
+        this.guildManager = guildManager;
+        this.playerShopManager = playerShopManager;
     }
 
     @Override
@@ -43,25 +47,8 @@ public class GuildBankTransactionsMenu extends PaginatedMenu {
     @Override
     public @NotNull List<ItemStack> getItems() {
         List<ItemStack> items = new ArrayList<>();
-        List<Long> timestamps = new ArrayList<>(guild.getTransactions().getQueue().keySet());
-        List<TransactionData> transactions = new ArrayList<>(guild.getTransactions().getQueue().values());
-        for (int i = 0; i < timestamps.size(); i++) {
-            long timestamp = timestamps.get(i);
-            TransactionData transaction = transactions.get(i);
-            int finalI = i;
-            items.add(new ItemBuilder(this, Material.PAPER, itemMeta -> {
-                itemMeta.setDisplayName(ChatColor.YELLOW + "Transaction #" + finalI);
-                List<String> lore = new ArrayList<>(List.of(
-                        ChatColor.GRAY + "■ Date: " + ChatColor.WHITE + new SimpleDateFormat("MM/dd/yyyy").format(timestamp),
-                        ChatColor.GRAY + "■ Nature: " + ChatColor.WHITE + transaction.nature(),
-                        ChatColor.GRAY + "■ Par: " + ChatColor.WHITE + Bukkit.getOfflinePlayer(transaction.sender()).getName()
-                ));
-                if (transaction.place() != null && !transaction.place().isEmpty()) {
-                    lore.add(ChatColor.GRAY + "■ Lieu: " + ChatColor.WHITE + transaction.place());
-                }
-                lore.add(ChatColor.GRAY + "■ Montant: " + EconomyManager.formatValue(transaction.value()));
-                itemMeta.setLore(lore);
-            }));
+        for (Shop shop : guild.getShops()) {
+            items.add(shop.getIcon(this, false).setNextMenu(new ShopMenu(getOwner(), guildManager, playerShopManager, shop, 0)));
         }
         return items;
     }
@@ -72,7 +59,7 @@ public class GuildBankTransactionsMenu extends PaginatedMenu {
         buttons.put(49, new ItemBuilder(this, Material.BARRIER, itemMeta -> itemMeta.setDisplayName(ChatColor.GRAY + "Fermer"))
                 .setCloseButton());
         ItemBuilder nextPageButton = new ItemBuilder(this, Material.GREEN_CONCRETE, itemMeta -> itemMeta.setDisplayName(ChatColor.GREEN + "Page suivante"));
-        if (getPage() == 0 && isLastPage()) {
+        if ((getPage() == 0 && isLastPage()) || guild.getShops().isEmpty()) {
             buttons.put(48, new ItemBuilder(this, Material.ARROW, itemMeta -> itemMeta.setDisplayName(ChatColor.RED + "Retour"))
                     .setNextMenu(new GuildMenu(getOwner(), guild, false)));
             buttons.put(50, nextPageButton);
@@ -86,7 +73,7 @@ public class GuildBankTransactionsMenu extends PaginatedMenu {
 
     @Override
     public @NotNull String getName() {
-        return "Transactions de la guilde";
+        return "Shop Management";
     }
 
     @Override

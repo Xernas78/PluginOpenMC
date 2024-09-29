@@ -1,4 +1,4 @@
-package fr.communaywen.core.corporation.menu;
+package fr.communaywen.core.corporation.menu.shop;
 
 import dev.xernas.menulib.Menu;
 import dev.xernas.menulib.utils.InventorySize;
@@ -148,6 +148,12 @@ public class ShopMenu extends Menu {
                     getOwner().closeInventory();
                     return;
                 }
+                //TODO Remettre ça
+//                if (buyState == MethodState.FAILURE) {
+//                    getOwner().sendMessage(ChatColor.RED + "Vous ne pouvez pas acheter vos propres items");
+//                    getOwner().closeInventory();
+//                    return;
+//                }
                 if (buyState == MethodState.WARNING) {
                     getOwner().sendMessage(ChatColor.RED + "Il n'y a pas assez de stock pour acheter cet item");
                     getOwner().closeInventory();
@@ -163,7 +169,8 @@ public class ShopMenu extends Menu {
                     getOwner().closeInventory();
                     return;
                 }
-                getOwner().sendMessage(ChatColor.GREEN + "Vous avez bien acheté " + amountToBuy + " " + getCurrentItem().getItem().getItemMeta().getDisplayName());
+                getOwner().sendMessage(ChatColor.GREEN + "Vous avez bien acheté " + amountToBuy + " " + ShopItem.getItemName(getOwner(), getCurrentItem().getItem()) + " pour " + (getCurrentItem().getPricePerItem() * amountToBuy) + "€");
+                getOwner().closeInventory();
             })));
         content.put(greenAddOne, new ItemBuilder(this, Material.LIME_STAINED_GLASS_PANE, itemMeta -> {
             itemMeta.setDisplayName(ChatColor.GREEN + "Ajouter 1");
@@ -236,7 +243,7 @@ public class ShopMenu extends Menu {
             lore.add(ChatColor.GRAY + "■ Ventes: " + ChatColor.WHITE + shop.getSales().size());
             lore.add(ChatColor.GRAY + "■ Cliquer pour voir vos ventes sur ce shop");
             itemMeta.setLore(lore);
-        }));
+        }).setNextMenu(new ShopSalesMenu(getOwner(), guildManager, playerShopManager, shop, itemIndex)));
         content.put(4, shop.getIcon(this, true));
         content.put(5, new ItemBuilder(this, Material.BARREL, itemMeta -> {
             itemMeta.setDisplayName(ChatColor.GOLD + "" + ChatColor.BOLD + "Voir les stocks");
@@ -244,7 +251,7 @@ public class ShopMenu extends Menu {
             lore.add(ChatColor.GRAY + "■ Stocks: " + ChatColor.WHITE + shop.getAllItemsAmount());
             lore.add(ChatColor.GRAY + "■ Cliquer pour voir les stocks de ce shop");
             itemMeta.setLore(lore);
-        }));
+        }).setNextMenu(new ShopStocksMenu(getOwner(), guildManager, playerShopManager, shop, itemIndex)));
         content.put(8, new ItemBuilder(this, Material.LIME_WOOL, itemMeta -> {
             itemMeta.setDisplayName(ChatColor.GREEN + "Ce shop vous appartient");
             if (shop.getOwner().isGuild()) {

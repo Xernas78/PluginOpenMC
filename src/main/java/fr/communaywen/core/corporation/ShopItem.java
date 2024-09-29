@@ -1,5 +1,6 @@
 package fr.communaywen.core.corporation;
 
+import fr.communaywen.core.utils.ItemUtils;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TranslatableComponent;
@@ -52,17 +53,6 @@ public class ShopItem {
             }
         }
         // If no custom name, return default name
-        return getDefaultItemName(localPlayer, itemStack);
-    }
-
-    private static String getDefaultItemName(Player localPlayer, ItemStack itemStack) {
-        Material material = itemStack.getType();
-        String translationKey = material.getTranslationKey();
-
-        TranslatableComponent translatable = Component.translatable(translationKey);
-
-        Component translated = GlobalTranslator.render(translatable, Locale.of(localPlayer.getLocale()));
-
-        return PlainTextComponentSerializer.plainText().serialize(translated);
+        return ItemUtils.getDefaultItemName(localPlayer, itemStack);
     }
 }
