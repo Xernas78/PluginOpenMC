@@ -58,17 +58,30 @@ public class ShopListener implements Listener {
             if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
                 return;
             }
-            Shop shop;
-            if (sign.getPersistentDataContainer().has(AywenCraftPlugin.GUILD_SHOP_KEY, PersistentDataType.STRING)) {
-                UUID shopUUID = UUID.fromString(Objects.requireNonNull(sign.getPersistentDataContainer().get(AywenCraftPlugin.GUILD_SHOP_KEY, PersistentDataType.STRING)));
-                shop = guildManager.getGuild(event.getPlayer().getUniqueId()).getShop(shopUUID);
+            boolean isGuildShop = sign.getPersistentDataContainer().has(AywenCraftPlugin.GUILD_SHOP_KEY, PersistentDataType.STRING);
+            boolean isPlayerShop = sign.getPersistentDataContainer().has(AywenCraftPlugin.PLAYER_SHOP_KEY, PersistentDataType.STRING);
+            UUID shopUUID = Shop.getShopPlayerLookingAt(event.getPlayer(), isGuildShop && !isPlayerShop, true);
+            Shop shop = null;
+            if (isGuildShop) {
+                shop = guildManager.getAnyShop(shopUUID);
             }
-            else if (sign.getPersistentDataContainer().has(AywenCraftPlugin.PLAYER_SHOP_KEY, PersistentDataType.STRING)) {
-                shop = playerShopManager.getShop(event.getPlayer().getUniqueId());
+            else if (isPlayerShop) {
+                shop = playerShopManager.getShop(shopUUID);
             }
-            else {
+            if (shop == null) {
                 return;
             }
+//            if (sign.getPersistentDataContainer().has(AywenCraftPlugin.GUILD_SHOP_KEY, PersistentDataType.STRING)) {
+//                UUID shopUUID = UUID.fromString(Objects.requireNonNull(sign.getPersistentDataContainer().get(AywenCraftPlugin.GUILD_SHOP_KEY, PersistentDataType.STRING)));
+//                shop = guildManager.getGuild(event.getPlayer().getUniqueId()).getShop(shopUUID);
+//            }
+//            else if (sign.getPersistentDataContainer().has(AywenCraftPlugin.PLAYER_SHOP_KEY, PersistentDataType.STRING)) {
+//                UUID shopUUID = UUID.fromString(Objects.requireNonNull(sign.getPersistentDataContainer().get(AywenCraftPlugin.PLAYER_SHOP_KEY, PersistentDataType.STRING)));
+//                shop = playerShopManager.getShop(shopUUID);
+//            }
+//            else {
+//                return;
+//            }
             event.setCancelled(true);
             ShopMenu menu = new ShopMenu(event.getPlayer(), guildManager, playerShopManager, shop, 0);
             menu.open();

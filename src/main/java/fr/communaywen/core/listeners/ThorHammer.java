@@ -7,14 +7,9 @@ import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
 import dev.lone.itemsadder.api.CustomStack;
-<<<<<<< HEAD
 import fr.communaywen.core.credit.annotations.Credit;
 import fr.communaywen.core.credit.annotations.Feature;
-=======
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
->>>>>>> upstream/main
 import fr.communaywen.core.utils.FallingBlocksExplosion;
 import org.bukkit.*;
 import org.bukkit.entity.EntityType;

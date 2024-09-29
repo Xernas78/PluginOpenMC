@@ -1,14 +1,9 @@
 package fr.communaywen.core.luckyblocks.commands;
 
-<<<<<<< HEAD
 import fr.communaywen.core.credit.annotations.Credit;
 import fr.communaywen.core.credit.annotations.Feature;
-=======
 import dev.xernas.menulib.Menu;
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.luckyblocks.guis.LuckyBlockGUI;
->>>>>>> upstream/main
 import fr.communaywen.core.luckyblocks.managers.LBPlayerManager;
 import fr.communaywen.core.luckyblocks.managers.LuckyBlockManager;
 import fr.communaywen.core.luckyblocks.objects.LuckyBlockEvent;

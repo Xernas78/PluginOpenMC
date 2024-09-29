@@ -49,12 +49,10 @@ public class Managers {
     private ContestManager contestManager;
     private LeaderboardManager leaderboardManager;
     private DimensionManager dreamdimManager;
-<<<<<<< HEAD
+
     // Managers de Xernas
-=======
     private MoonDimensionManager moonDimManager;
     private HomeManager homeManager;
->>>>>>> upstream/main
     private TeamManager teamManager;
     private GuildManager guildManager;
     private PlayerShopManager playerShopManager;
@@ -144,15 +142,11 @@ public class Managers {
         reportManager.loadReports();
         luckyBlockManager = new LuckyBlockManager();
         lbPlayerManager = new LBPlayerManager();
-<<<<<<< HEAD
         this.teamManager = new TeamManager(plugin);
         this.guildManager = new GuildManager();
         this.playerShopManager = new PlayerShopManager(economyManager);
-=======
         homesManagers = new HomesManagers();
         homeUpgradeManager = new HomeUpgradeManager(homesManagers, plugin);
-
->>>>>>> upstream/main
 
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));
         LevelsDataManager.setLevelsFile(levelsConfig, new File(plugin.getDataFolder(), "levels.yml"));

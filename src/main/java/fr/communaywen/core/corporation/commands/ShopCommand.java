@@ -92,7 +92,7 @@ public class ShopCommand {
     @Description("Sell an item in your shop")
     public void sellItem(Player player, @Named("price") double price) {
         boolean isInGuild = guildManager.isInGuild(player.getUniqueId());
-        UUID shopUUID = Shop.getShopPlayerLookingAt(player, isInGuild);
+        UUID shopUUID = Shop.getShopPlayerLookingAt(player, isInGuild, false);
         if (shopUUID == null) {
             player.sendMessage(ChatColor.RED + "Shop non reconnu");
             return;
@@ -134,7 +134,7 @@ public class ShopCommand {
     @Description("Unsell an item in your shop")
     public void unsellItem(Player player, @Named("item number") int itemIndex) {
         boolean isInGuild = guildManager.isInGuild(player.getUniqueId());
-        UUID shopUUID = Shop.getShopPlayerLookingAt(player, isInGuild);
+        UUID shopUUID = Shop.getShopPlayerLookingAt(player, isInGuild, false);
         if (shopUUID == null) {
             player.sendMessage(ChatColor.RED + "Shop non reconnu");
             return;
@@ -188,7 +188,7 @@ public class ShopCommand {
     @Description("Delete a shop")
     public void deleteShop(Player player) {
         boolean isInGuild = guildManager.isInGuild(player.getUniqueId());
-        UUID shopUUID = Shop.getShopPlayerLookingAt(player, isInGuild);
+        UUID shopUUID = Shop.getShopPlayerLookingAt(player, isInGuild, false);
         if (shopUUID == null) {
             player.sendMessage(ChatColor.RED + "Shop non reconnu");
             return;
@@ -226,7 +226,7 @@ public class ShopCommand {
             player.sendMessage(ChatColor.RED + "Vous n'avez pas de shop");
             return;
         }
-        MethodState methodState = playerShopManager.deleteShop(player.getUniqueId());
+        MethodState methodState = playerShopManager.deleteShop(player.getUniqueId(), shopUUID);
         if (methodState == MethodState.WARNING) {
             player.sendMessage(ChatColor.RED + "Votre shop n'est pas vide");
             return;

@@ -1,21 +1,12 @@
 package fr.communaywen.core.luckyblocks.managers;
 
-<<<<<<< HEAD
 import fr.communaywen.core.credit.annotations.Credit;
 import fr.communaywen.core.credit.annotations.Feature;
-import fr.communaywen.core.luckyblocks.events.LBMoonGravity;
-import fr.communaywen.core.luckyblocks.events.LBSolarGravity;
-import fr.communaywen.core.luckyblocks.events.LBSpawnShulker;
-import fr.communaywen.core.luckyblocks.events.LBStructureHerobrine;
-=======
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.luckyblocks.events.bonus.*;
 import fr.communaywen.core.luckyblocks.events.malus.*;
 import fr.communaywen.core.luckyblocks.events.neutrals.LBBatman;
 import fr.communaywen.core.luckyblocks.events.neutrals.LBSpawnGlowsquid;
 import fr.communaywen.core.luckyblocks.events.neutrals.LBStructureHerobrine;
->>>>>>> upstream/main
 import fr.communaywen.core.luckyblocks.objects.LuckyBlockEvent;
 import lombok.Getter;
 import org.bukkit.inventory.ItemStack;

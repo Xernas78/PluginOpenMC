@@ -106,6 +106,16 @@ public class GuildManager {
         return null;
     }
 
+    public Shop getAnyShop(UUID shopUUID) {
+        for (Guild guild : guilds) {
+            Shop shop = guild.getShop(shopUUID);
+            if (shop != null) {
+                return shop;
+            }
+        }
+        return null;
+    }
+
     public Guild getGuild(UUID player) {
         for (Guild guild : guilds) {
             if (guild.getMerchants().containsKey(player)) {

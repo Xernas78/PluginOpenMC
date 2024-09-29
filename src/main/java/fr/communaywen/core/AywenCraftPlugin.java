@@ -446,11 +446,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new LBBlockBreakListener(managers.getLuckyBlockManager()),
                 new LBPlayerQuitListener(managers.getLuckyBlockManager()),
                 new LBPlayerInteractListener(managers.getLuckyBlockManager()),
-<<<<<<< HEAD
-                new ShopListener(managers.getGuildManager(), managers.getPlayerShopManager())
-=======
+                new ShopListener(managers.getGuildManager(), managers.getPlayerShopManager()),
                 new LBEntityDeathListener(managers.getLuckyBlockManager())
->>>>>>> upstream/main
         );
 
         getServer().getPluginManager().registerEvents(eventsManager, this); // TODO: refactor

@@ -202,15 +202,17 @@ public class Shop {
         return inventory;
     }
 
-    public static UUID getShopPlayerLookingAt(Player player, boolean isGuild) {
+    public static UUID getShopPlayerLookingAt(Player player, boolean isGuild, boolean onlySign) {
         Block targetBlock = player.getTargetBlockExact(5);
         //TODO ItemsAdder cash register
         if (targetBlock == null || (targetBlock.getType() != Material.BARREL && targetBlock.getType() != Material.OAK_SIGN)) {
             return null;
         }
         String shopUUID = null;
-        if (targetBlock.getState() instanceof Barrel barrel) {
-            shopUUID = barrel.getPersistentDataContainer().get(isGuild ? AywenCraftPlugin.GUILD_SHOP_KEY : AywenCraftPlugin.PLAYER_SHOP_KEY, PersistentDataType.STRING);
+        if (!onlySign) {
+            if (targetBlock.getState() instanceof Barrel barrel) {
+                shopUUID = barrel.getPersistentDataContainer().get(isGuild ? AywenCraftPlugin.GUILD_SHOP_KEY : AywenCraftPlugin.PLAYER_SHOP_KEY, PersistentDataType.STRING);
+            }
         }
         else if (targetBlock.getState() instanceof Sign sign) {
             shopUUID = sign.getPersistentDataContainer().get(isGuild ? AywenCraftPlugin.GUILD_SHOP_KEY : AywenCraftPlugin.PLAYER_SHOP_KEY, PersistentDataType.STRING);
