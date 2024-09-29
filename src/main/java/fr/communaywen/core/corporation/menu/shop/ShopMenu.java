@@ -223,7 +223,7 @@ public class ShopMenu extends Menu {
                 getOwner().sendMessage(ChatColor.GOLD + "[Shop]" + ChatColor.GREEN + " +75€ de remboursés sur la banque de la guilde");
             }
             else {
-                MethodState methodState = playerShopManager.deleteShop(getOwner().getUniqueId(), shop.getUuid());
+                MethodState methodState = playerShopManager.deleteShop(getOwner().getUniqueId());
                 if (methodState == MethodState.WARNING) {
                     getOwner().sendMessage(ChatColor.RED + "Votre shop n'est pas vide");
                     return;

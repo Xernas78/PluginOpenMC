@@ -44,7 +44,7 @@ public class ShopCommand {
             player.sendMessage("Usage: /shop <create | manage | sell | unsell | delete> <shop>");
             return;
         }
-        ShopMenu shopMenu = new ShopMenu(player, guildManager, playerShopManager, playerShopManager.getShop(player.getUniqueId()), 0);
+        ShopMenu shopMenu = new ShopMenu(player, guildManager, playerShopManager, playerShopManager.getPlayerShop(player.getUniqueId()), 0);
         shopMenu.open();
     }
 
@@ -92,12 +92,12 @@ public class ShopCommand {
     @Description("Sell an item in your shop")
     public void sellItem(Player player, @Named("price") double price) {
         boolean isInGuild = guildManager.isInGuild(player.getUniqueId());
-        UUID shopUUID = Shop.getShopPlayerLookingAt(player, isInGuild, false);
-        if (shopUUID == null) {
-            player.sendMessage(ChatColor.RED + "Shop non reconnu");
-            return;
-        }
         if (isInGuild) {
+            UUID shopUUID = Shop.getShopPlayerLookingAt(player, isInGuild, false);
+            if (shopUUID == null) {
+                player.sendMessage(ChatColor.RED + "Shop non reconnu");
+                return;
+            }
             Shop shop = guildManager.getGuild(player.getUniqueId()).getShop(shopUUID);
             if (shop == null) {
                 player.sendMessage(ChatColor.RED + "Ce shop n'appartient pas à votre guilde");
@@ -116,7 +116,7 @@ public class ShopCommand {
             player.sendMessage(ChatColor.RED + "Vous n'avez pas de shop");
             return;
         }
-        Shop shop = playerShopManager.getShop(player.getUniqueId());
+        Shop shop = playerShopManager.getPlayerShop(player.getUniqueId());
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item == null || item.getType() == Material.AIR) {
             player.sendMessage(ChatColor.RED + "Vous devez tenir un item dans votre main");
@@ -134,12 +134,12 @@ public class ShopCommand {
     @Description("Unsell an item in your shop")
     public void unsellItem(Player player, @Named("item number") int itemIndex) {
         boolean isInGuild = guildManager.isInGuild(player.getUniqueId());
-        UUID shopUUID = Shop.getShopPlayerLookingAt(player, isInGuild, false);
-        if (shopUUID == null) {
-            player.sendMessage(ChatColor.RED + "Shop non reconnu");
-            return;
-        }
         if (isInGuild) {
+            UUID shopUUID = Shop.getShopPlayerLookingAt(player, isInGuild, false);
+            if (shopUUID == null) {
+                player.sendMessage(ChatColor.RED + "Shop non reconnu");
+                return;
+            }
             Shop shop = guildManager.getGuild(player.getUniqueId()).getShop(shopUUID);
             if (shop == null) {
                 player.sendMessage(ChatColor.RED + "Ce shop n'appartient pas à votre guilde");
@@ -168,7 +168,7 @@ public class ShopCommand {
             player.sendMessage(ChatColor.RED + "Vous n'avez pas de shop");
             return;
         }
-        Shop shop = playerShopManager.getShop(player.getUniqueId());
+        Shop shop = playerShopManager.getPlayerShop(player.getUniqueId());
         ShopItem item = shop.getItem(itemIndex - 1);
         if (item == null) {
             player.sendMessage(ChatColor.RED + "Cet item n'est pas dans le shop");
@@ -226,7 +226,7 @@ public class ShopCommand {
             player.sendMessage(ChatColor.RED + "Vous n'avez pas de shop");
             return;
         }
-        MethodState methodState = playerShopManager.deleteShop(player.getUniqueId(), shopUUID);
+        MethodState methodState = playerShopManager.deleteShop(player.getUniqueId());
         if (methodState == MethodState.WARNING) {
             player.sendMessage(ChatColor.RED + "Votre shop n'est pas vide");
             return;
@@ -252,7 +252,7 @@ public class ShopCommand {
             player.sendMessage(ChatColor.RED + "Vous n'avez pas de shop");
             return;
         }
-        ShopMenu shopMenu = new ShopMenu(player, guildManager, playerShopManager, playerShopManager.getShop(player.getUniqueId()), 0);
+        ShopMenu shopMenu = new ShopMenu(player, guildManager, playerShopManager, playerShopManager.getPlayerShop(player.getUniqueId()), 0);
         shopMenu.open();
     }
 

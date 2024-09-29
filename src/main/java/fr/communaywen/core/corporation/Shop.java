@@ -7,6 +7,7 @@ import fr.communaywen.core.credit.annotations.Credit;
 import fr.communaywen.core.credit.annotations.Feature;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.teams.utils.MethodState;
+import fr.communaywen.core.utils.ItemUtils;
 import fr.communaywen.core.utils.world.WorldUtils;
 import fr.communaywen.core.utils.world.Yaw;
 import lombok.Getter;
@@ -160,7 +161,10 @@ public class Shop {
         //TODO Give certain amount of that item to the buyer
         ItemStack toGive = item.getItem().clone();
         toGive.setAmount(amount);
-        buyer.getInventory().addItem(toGive);
+        List<ItemStack> stacks = ItemUtils.splitAmountIntoStack(toGive);
+        for (ItemStack stack : stacks) {
+            buyer.getInventory().addItem(stack);
+        }
         sales.add(item.copy().setAmount(amount));
         return MethodState.SUCCESS;
     }
