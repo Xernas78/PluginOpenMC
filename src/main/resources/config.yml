@@ -23,6 +23,12 @@ discord:
   webhookName: Annonce Serveur
 mine:
   name: mine
+leaderboard:
+  baltop:
+    posX: 285
+    posY: 80
+    posZ: 160
+    world: "world"
 contest:
   config:
     worldName: "world"
@@ -127,8 +133,8 @@ contest:
       amount: 2
       amount_shell: 5
       selected: false
-    - ress: SLIME_BLOCK
-      amount: 4
+    - ress: SHROOMLIGHT
+      amount: 3
       amount_shell: 1
       selected: false
     - ress: ROOTED_DIRT

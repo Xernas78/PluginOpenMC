@@ -53,6 +53,8 @@ public class DatabaseManager {
                                                       "refused BOOLEAN NOT NULL DEFAULT FALSE" +
                                                       ")").executeUpdate();
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS blacklists (Owner VARCHAR(36), Blocked VARCHAR(36))").executeUpdate();
+
+        this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS personal_homes (id SMALLINT unsigned NOT NULL PRIMARY KEY, player VARCHAR(36), spawnpoint VARCHAR(255) DEFAULT NULL, biome VARCHAR(255) DEFAULT 'PLAINS', allow_visit BOOLEAN DEFAULT false)").executeUpdate();
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS link (discord_id VARCHAR(100) NOT NULL, minecraft_uuid VARCHAR(36))").executeUpdate();
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS link_verif (minecraft_uuid VARCHAR(36) NOT NULL, code int(11) NOT NULL)").executeUpdate();
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS events_rewards (player VARCHAR(36) NOT NULL PRIMARY KEY, scope VARCHAR(32) NOT NULL, isClaimed BOOLEAN)").executeUpdate();
@@ -110,8 +112,24 @@ public class DatabaseManager {
         // Table camps
         this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS camps (minecraft_uuid VARCHAR(36), name VARCHAR(36), camps int(11), point_dep int(11))").executeUpdate();
 
-        System.out.println("Les tables ont été créées si besoin");
+        // Système de homes
+        this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS homes (" +
+                "  player varchar(36) NOT NULL," +
+                "  name varchar(10) NOT NULL," +
+                "  location mediumtext NOT NULL" +
+                ")").executeUpdate();
+
+        // Système de players
+        this.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS players (" +
+                "player VARCHAR(36) NOT NULL PRIMARY KEY," +
+                "homes_limit INT NOT NULL DEFAULT 1" +
+                ")").executeUpdate();
+
         this.getConnection().prepareStatement("ALTER TABLE claim ADD COLUMN IF NOT EXISTS claimer VARCHAR(36) NOT NULL").executeUpdate();
+
+
+        System.out.println("Les tables ont été créer si besoin");
+
     }
 
     public void close() {

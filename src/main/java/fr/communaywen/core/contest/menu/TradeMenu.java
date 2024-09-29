@@ -47,7 +47,7 @@ public class TradeMenu extends Menu {
             Map<Integer, ItemStack> inventory = new HashMap<>();
             if (getOwner().getOpenInventory().getTitle()!="Le Contest - Les Trades") {
                 String campName = ContestManager.getPlayerCampName(getOwner());
-                ChatColor campColor = ContestManager.getPlayerCampChatColor(getOwner());
+                ChatColor campColor = ContestManager.getPlayerColorCache(getOwner());
                 Material shell_contest = CustomStack.getInstance("contest:contest_shell").getItemStack().getType();
 
                 List<String> loreinfo = new ArrayList<String>();
@@ -179,6 +179,10 @@ public class TradeMenu extends Menu {
 
                            lore_trades.clear();
                 }
+
+                    inventory.put(27, new ItemBuilder(this, Material.ARROW, itemMeta -> {
+                        itemMeta.setDisplayName("§r§aRetour");
+                    }).setBackButton());
 
                    inventory.put(35, new ItemBuilder(this, Material.EMERALD, itemMeta -> {
                        itemMeta.setDisplayName("§r§aPlus d'info !");

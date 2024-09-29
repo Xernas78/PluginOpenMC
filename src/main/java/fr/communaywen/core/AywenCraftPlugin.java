@@ -1,6 +1,11 @@
 package fr.communaywen.core;
 
 import com.onarandombox.MultiverseCore.MultiverseCore;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.flags.Flag;
+import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
+import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import dev.xernas.menulib.Menu;
 import dev.xernas.menulib.MenuLib;
 import fr.communaywen.core.claim.ClaimConfigDataBase;
@@ -9,6 +14,7 @@ import fr.communaywen.core.claim.GamePlayer;
 import fr.communaywen.core.claim.RegionManager;
 import fr.communaywen.core.clockinfos.tasks.CompassClockTask;
 import fr.communaywen.core.commands.contest.ContestCommand;
+import fr.communaywen.core.commands.corpse.CorpseCommand;
 import fr.communaywen.core.commands.credits.CreditCommand;
 import fr.communaywen.core.commands.credits.FeatureCommand;
 import fr.communaywen.core.commands.economy.AdminShopCommand;
@@ -18,6 +24,10 @@ import fr.communaywen.core.commands.economy.PayCommands;
 import fr.communaywen.core.commands.explosion.ExplodeRandomCommand;
 import fr.communaywen.core.commands.explosion.FBoomCommand;
 import fr.communaywen.core.commands.fun.*;
+import fr.communaywen.core.commands.homes.DelhomesCommands;
+import fr.communaywen.core.commands.homes.HomesCommands;
+import fr.communaywen.core.commands.homes.RenameHomeCommands;
+import fr.communaywen.core.commands.homes.SethomesCommands;
 import fr.communaywen.core.commands.teams.TeamClaim;
 import fr.communaywen.core.commands.link.LinkCommand;
 import fr.communaywen.core.commands.link.ManualLinkCommand;
@@ -32,6 +42,7 @@ import fr.communaywen.core.commands.teleport.SpawnCommand;
 import fr.communaywen.core.commands.utils.*;
 import fr.communaywen.core.contest.ContestIntractEvents;
 import fr.communaywen.core.contest.ContestListener;
+import fr.communaywen.core.contest.ContestManager;
 import fr.communaywen.core.contest.FirerocketSpawnListener;
 import fr.communaywen.core.corporation.Shop;
 import fr.communaywen.core.corporation.commands.GuildCommand;
@@ -44,16 +55,21 @@ import fr.communaywen.core.customitems.listeners.CIPrepareAnvilListener;
 import fr.communaywen.core.elevator.ElevatorListener;
 import fr.communaywen.core.fallblood.BandageRecipe;
 import fr.communaywen.core.friends.commands.FriendsCommand;
+import fr.communaywen.core.homes.Home;
+import fr.communaywen.core.homes.HomesManagers;
 import fr.communaywen.core.levels.LevelsCommand;
 import fr.communaywen.core.levels.LevelsListeners;
 import fr.communaywen.core.listeners.*;
 import fr.communaywen.core.luckyblocks.commands.LuckyBlockCommand;
 import fr.communaywen.core.luckyblocks.listeners.LBBlockBreakListener;
+import fr.communaywen.core.luckyblocks.listeners.LBEntityDeathListener;
 import fr.communaywen.core.luckyblocks.listeners.LBPlayerInteractListener;
 import fr.communaywen.core.luckyblocks.listeners.LBPlayerQuitListener;
 import fr.communaywen.core.mailboxes.MailboxCommand;
 import fr.communaywen.core.mailboxes.MailboxListener;
 import fr.communaywen.core.managers.ChunkListManager;
+import fr.communaywen.core.managers.LeaderboardManager;
+import fr.communaywen.core.personalhome.HSCommand;
 import fr.communaywen.core.quests.PlayerQuests;
 import fr.communaywen.core.quests.QuestsListener;
 import fr.communaywen.core.quests.QuestsManager;
@@ -77,6 +93,7 @@ import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -102,6 +119,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public final class AywenCraftPlugin extends JavaPlugin {
     public static ArrayList<Player> frozenPlayers = new ArrayList<>();
@@ -127,6 +145,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
     private BukkitCommandHandler handler;
     @Getter
     private TabList tabList;
+    private HashMap<Class<?>, HashMap<String, Flag<?>>> flags;
 
     /**
      * Format a permission with the permission prefix.
@@ -139,6 +158,15 @@ public final class AywenCraftPlugin extends JavaPlugin {
     public static @NotNull String formatPermission(final @NotNull PermissionCategory category,
             final @NotNull String suffix) {
         return category.formatPermission(suffix);
+    }
+
+    @Override
+    public void onLoad() {
+        this.registerFlags(new StateFlag("disable-thor-hammer", false));
+        this.registerFlags(new StateFlag("disable-hammer", false));
+        this.registerFlags(new StateFlag("disable-builder-wand", false));
+        this.registerFlags(new StateFlag("disable-fly", false));
+        this.registerFlags(new StateFlag("disable-spawn-grave", false));
     }
 
     @SneakyThrows
@@ -201,9 +229,96 @@ public final class AywenCraftPlugin extends JavaPlugin {
         this.handler.accept(interactiveHelpMenu);
         this.handler.getTranslator().setLocale(Locale.FRENCH);
 
+        this.handler.getAutoCompleter().registerSuggestion("homes", (args, sender, command) -> {
+            Player player = Bukkit.getPlayer(sender.getUniqueId());
+            List<String> suggestions = new ArrayList<>();
+
+            if(command.getName().equals("home")) {
+                suggestions.add("upgrade");
+            }
+
+            assert player != null;
+            if(args.isEmpty()) {
+                if(player.hasPermission("ayw.home.teleport.others")) {
+                    suggestions.addAll(Bukkit.getOnlinePlayers().stream()
+                            .map(OfflinePlayer::getName)
+                            .map(name -> name + ":")
+                            .toList());
+
+                }
+                suggestions.addAll(managers.getHomesManagers().getHomeNamesByPlayer(player.getUniqueId()));
+            } else {
+                String arg = args.getFirst();
+
+                if(arg.contains(":") && player.hasPermission("ayw.home.teleport.others")) {
+                    String[] parts = arg.split(":", 2);
+                    Player target = Bukkit.getPlayer(parts[0]);
+
+                    if(target != null) {
+                        String prefix = parts[0] + ":";
+                        suggestions.addAll(managers.getHomesManagers().getHomeNamesByPlayer(target.getUniqueId())
+                                .stream()
+                                .map(home -> prefix + home)
+                                .toList());
+                    }
+                } else {
+                    if (player.hasPermission("ayw.home.teleport.others")) {
+                        suggestions.addAll(Bukkit.getOnlinePlayers().stream()
+                                .map(OfflinePlayer::getName)
+                                .filter(name -> name.toLowerCase().startsWith(arg.toLowerCase()))
+                                .map(name -> name + ":")
+                                .toList());
+                    }
+
+                    suggestions.addAll(managers.getHomesManagers().getHomeNamesByPlayer(player.getUniqueId())
+                            .stream()
+                            .filter(home -> home.toLowerCase().startsWith(arg.toLowerCase()))
+                            .toList());
+                }
+
+                return suggestions;
+            }
+
+            if(player.hasPermission("ayw.home.teleport.others")) {
+
+                System.out.println("args: " + args);
+
+                suggestions.addAll(Bukkit.getOnlinePlayers().stream()
+                        .map(OfflinePlayer::getName)
+                        .map(name -> name + ":")
+                        .toList());
+            }
+
+            suggestions.addAll(HomesManagers.homes.stream()
+                    .filter(home -> home.getPlayer().equals(sender.getUniqueId().toString()))
+                    .map(Home::getName)
+                    .toList());
+
+            suggestions.add("upgrade");
+            return suggestions;
+        });
+
         this.handler.getAutoCompleter().registerSuggestion("featureName", SuggestionProvider.of(managers.getWikiConfig().getKeys(false)));
+        this.handler.getAutoCompleter().registerSuggestion("lbEventsId", SuggestionProvider.of(managers.getLuckyBlockManager().getLuckyBlocksIds()));
+        this.handler.getAutoCompleter().registerSuggestion("colorContest", SuggestionProvider.of(ContestManager.getColorContestList()));
+
+        this.handler.getAutoCompleter().registerParameterSuggestions(OfflinePlayer.class, ((args, sender, command) -> {
+            OfflinePlayer[] offlinePlayers = Bukkit.getServer().getOfflinePlayers();
+            List<String> playerNames = new ArrayList<>();
+
+            for (OfflinePlayer player : offlinePlayers) {
+                String playerName = player.getName();
+                if (playerName != null) {
+                    playerNames.add(playerName);
+                }
+            }
+
+            return playerNames;
+        }));
 
         this.handler.register(
+                new CorpseCommand(this),
+                new HSCommand(getManagers().getHomeManager()),
                 new ContestCommand(this, loadEventsManager()),
                 new TeamAdminCommand(this),
                 new SpawnCommand(this),
@@ -250,7 +365,11 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new MailboxCommand(),
                 new RandomEventsCommand(this),
                 new TeamClaim(),
-                new LuckyBlockCommand(managers.getLbPlayerManager())
+                new LuckyBlockCommand(managers.getLbPlayerManager(), managers.getLuckyBlockManager()),
+                new HomesCommands(managers.getHomeUpgradeManager(), managers.getHomesManagers()),
+                new SethomesCommands(managers.getHomesManagers()),
+                new DelhomesCommands(managers.getHomesManagers()),
+                new RenameHomeCommands(managers.getHomesManagers())
         );
 
         /*  --------  */
@@ -288,6 +407,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
 
         /* LISTENERS */
         registerEvents(
+                //new LeaderboardListener(this),
+                new CustomFlagsEvents(this),
                 new FirerocketSpawnListener(this),
                 new ContestListener(this, loadEventsManager()),
                 new ContestIntractEvents(),
@@ -303,11 +424,11 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new WelcomeMessage(managers.getWelcomeMessageConfig()),
                 new Dream(this),
                 new VpnListener(this),
-                new ThorHammer(),
+                new ThorHammer(this),
                 new FriendsListener(managers.getFriendsManager()),
                 new TablistListener(this),
                 new LevelsListeners(managers.getLevelsManager()),
-                new CorpseListener(managers.getCorpseManager()),
+                new CorpseListener(managers.getCorpseManager(), this),
                 new TradeListener(),
                 new QuestsListener(),
                 new PasFraisListener(this),
@@ -325,7 +446,11 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new LBBlockBreakListener(managers.getLuckyBlockManager()),
                 new LBPlayerQuitListener(managers.getLuckyBlockManager()),
                 new LBPlayerInteractListener(managers.getLuckyBlockManager()),
+<<<<<<< HEAD
                 new ShopListener(managers.getGuildManager(), managers.getPlayerShopManager())
+=======
+                new LBEntityDeathListener(managers.getLuckyBlockManager())
+>>>>>>> upstream/main
         );
 
         getServer().getPluginManager().registerEvents(eventsManager, this); // TODO: refactor
@@ -346,6 +471,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
         QuestsManager.initializeQuestsTable();
         ClaimConfigDataBase.processStoredClaimData();
         new BandageRecipe();
+
+        //LeaderboardManager.createLeaderboard();
     }
 
     @SneakyThrows
@@ -372,6 +499,37 @@ public final class AywenCraftPlugin extends JavaPlugin {
         for (Listener listener : args) {
             getServer().getPluginManager().registerEvents(listener, this);
         }
+    }
+
+    private void registerFlags(Flag<?> flag) {
+        FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
+        if (this.flags == null) {
+            this.flags = new HashMap<>();
+        }
+        try {
+            registry.register(flag);
+            if (flags.containsKey(flag.getClass())) {
+                this.flags.get(flag.getClass()).put(flag.getName(), flag);
+            } else {
+                this.flags.put(flag.getClass(), new HashMap<>());
+                this.flags.get(flag.getClass()).put(flag.getName(), flag);
+            }
+        } catch (FlagConflictException e) {
+            Flag<?> existing = registry.get(flag.getName());
+            if (existing instanceof StateFlag) {
+                if (flags.containsKey(flag.getClass())) {
+                    this.flags.get(flag.getClass()).put(flag.getName(), flag);
+                } else {
+                    this.flags.put(flag.getClass(), new HashMap<>());
+                    this.flags.get(flag.getClass()).put(flag.getName(), flag);
+                }
+            } else {
+                System.out.println("Flag: " + flag.getName() + " could not be registered!");
+            }
+        }
+    }
+    public HashMap<Class<?>, HashMap<String, Flag<?>>> getCustomFlags() {
+        return flags;
     }
 
     public ArrayList<Player> getFrozenPlayers() {

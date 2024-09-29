@@ -1,4 +1,4 @@
-package fr.communaywen.core.luckyblocks.events;
+package fr.communaywen.core.luckyblocks.events.neutrals;
 
 import fr.communaywen.core.credit.annotations.Credit;
 import fr.communaywen.core.credit.annotations.Feature;
@@ -20,11 +20,13 @@ public class LBStructureHerobrine extends LuckyBlockEvent {
     private final File file = Structure.getStructureFile("lb_herobrine");
 
     public LBStructureHerobrine() {
-        super("Un vieil ami",
+        super(
+                "structure_herobrine",
+                "Un vieil ami",
                 "Apparition de la structure d'Herobrine !",
-                0.5f,
+                0.4f,
                 EventType.NEUTRAL,
-                new ItemStack(Material.PLAYER_HEAD)
+                new ItemStack(Material.NETHERRACK)
         );
     }
 

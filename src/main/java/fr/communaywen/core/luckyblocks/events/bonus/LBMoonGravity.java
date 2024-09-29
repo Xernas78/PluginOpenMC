@@ -1,4 +1,4 @@
-package fr.communaywen.core.luckyblocks.events;
+package fr.communaywen.core.luckyblocks.events.bonus;
 
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.credit.annotations.Credit;
@@ -19,9 +19,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class LBMoonGravity extends LuckyBlockEvent implements LuckyBlockListeners {
 
     public LBMoonGravity() {
-        super("Gravité Lunaire!",
+        super(
+                "moon_gravity",
+                "Gravité Lunaire!",
                 "Gravité Lunaire pendant 1 minute !",
-                0.5f,
+                0.4f,
                 EventType.BONUS,
                 new ItemStack(Material.WHITE_WOOL)
         );

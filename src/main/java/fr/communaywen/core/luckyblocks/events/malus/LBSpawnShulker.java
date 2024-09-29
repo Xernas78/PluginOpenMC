@@ -1,4 +1,4 @@
-package fr.communaywen.core.luckyblocks.events;
+package fr.communaywen.core.luckyblocks.events.malus;
 
 import fr.communaywen.core.credit.annotations.Credit;
 import fr.communaywen.core.credit.annotations.Feature;
@@ -15,9 +15,11 @@ import org.bukkit.inventory.ItemStack;
 public class LBSpawnShulker extends LuckyBlockEvent {
 
     public LBSpawnShulker() {
-        super("Wingardiuuuum Levioosaaaaa",
+        super(
+                "spawn_shulker",
+                "Wingardiuuuum Levioosaaaaa",
                 "Un Shulker est apparu !",
-                0.5f,
+                0.1f,
                 EventType.MALUS,
                 new ItemStack(Material.SHULKER_BOX)
         );
