@@ -1,17 +1,11 @@
 package fr.communaywen.core.dreamdim;
 
 import fr.communaywen.core.AywenCraftPlugin;
-<<<<<<< HEAD
 import fr.communaywen.core.credit.annotations.Collaborators;
 import fr.communaywen.core.credit.annotations.Credit;
 import fr.communaywen.core.credit.annotations.Feature;
-=======
-import fr.communaywen.core.credit.Collaborators;
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.dreamdim.enchantments.Coma;
 import fr.communaywen.core.dreamdim.enchantments.DreamSlayer;
->>>>>>> upstream/main
 import fr.communaywen.core.dreamdim.fishing.FishingListener;
 import fr.communaywen.core.dreamdim.listeners.*;
 import fr.communaywen.core.dreamdim.populators.LightPopulator;
