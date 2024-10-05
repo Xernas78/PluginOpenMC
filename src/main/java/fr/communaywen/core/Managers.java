@@ -56,13 +56,10 @@ public class Managers {
     private MoonDimensionManager moonDimManager;
     private HomeManager homeManager;
     private TeamManager teamManager;
-<<<<<<< HEAD
     private GuildManager guildManager;
     private PlayerShopManager playerShopManager;
     // :)
-=======
     private GuidelineManager guidelineManager;
->>>>>>> upstream/main
     private FeatureManager featureManager;
     private FriendsManager friendsManager;
     private CorpseManager corpseManager;
