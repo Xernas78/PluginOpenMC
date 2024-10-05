@@ -175,7 +175,7 @@ public class TeamCommand {
             return;
         }
         if (state == MethodState.SPECIAL) {
-            CommandUtils.sendMessage(player, ChatColor.DARK_RED + "Impossible de kick, la team serait supprimée mais elle possède une guilde, si l'erreur persiste veuillez contacter un admin, modo ou manager !", true);
+            CommandUtils.sendMessage(player, ChatColor.DARK_RED + "Impossible de kick, la team serait supprimée mais elle possède une entreprise, si l'erreur persiste veuillez contacter un admin, modo ou manager !", true);
             return;
         }
         if (state == MethodState.WARNING)

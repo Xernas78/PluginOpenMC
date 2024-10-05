@@ -5,11 +5,8 @@ api-version: '1.21.1'
 depend:
   - ProtocolLib
   - ItemsAdder
-<<<<<<< HEAD
   - WorldGuard
-=======
   - UltimateAdvancementAPI
->>>>>>> upstream/main
 
 permissions:
   ayw.command.taille:
@@ -31,6 +28,9 @@ permissions:
     default: true
   ayw.command.teams:
     description: 'Teams'
+    default: true
+  ayw.command.company:
+    description: 'Company'
     default: true
   ayw.command.rules:
     description: 'Rules'

@@ -3,7 +3,7 @@ package fr.communaywen.core;
 import fr.communaywen.core.commands.fun.RewardCommand;
 import fr.communaywen.core.commands.randomEvents.RandomEventsData;
 import fr.communaywen.core.contest.ContestManager;
-import fr.communaywen.core.corporation.GuildManager;
+import fr.communaywen.core.corporation.CompanyManager;
 import fr.communaywen.core.corporation.PlayerShopManager;
 import fr.communaywen.core.corpse.CorpseManager;
 import fr.communaywen.core.credit.FeatureManager;
@@ -56,7 +56,7 @@ public class Managers {
     private MoonDimensionManager moonDimManager;
     private HomeManager homeManager;
     private TeamManager teamManager;
-    private GuildManager guildManager;
+    private CompanyManager companyManager;
     private PlayerShopManager playerShopManager;
     // :)
     private GuidelineManager guidelineManager;
@@ -148,7 +148,7 @@ public class Managers {
         luckyBlockManager = new LuckyBlockManager();
         lbPlayerManager = new LBPlayerManager();
         this.teamManager = new TeamManager(plugin);
-        this.guildManager = new GuildManager();
+        this.companyManager = new CompanyManager();
         this.playerShopManager = new PlayerShopManager(economyManager);
         homesManagers = new HomesManagers();
         homeUpgradeManager = new HomeUpgradeManager(homesManagers, plugin);

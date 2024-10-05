@@ -1,8 +1,8 @@
 package fr.communaywen.core.teams;
 
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.corporation.Guild;
-import fr.communaywen.core.corporation.GuildManager;
+import fr.communaywen.core.corporation.Company;
+import fr.communaywen.core.corporation.CompanyManager;
 import fr.communaywen.core.credit.annotations.Credit;
 import fr.communaywen.core.credit.annotations.Feature;
 import fr.communaywen.core.teams.cache.TeamCache;
@@ -11,7 +11,6 @@ import fr.communaywen.core.utils.Queue;
 import fr.communaywen.core.utils.database.DatabaseConnector;
 import fr.communaywen.core.utils.serializer.BukkitSerializer;
 import lombok.Getter;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -109,10 +108,10 @@ public class TeamManager extends DatabaseConnector {
         teams.remove(team);
         try {
             team.delete();
-            GuildManager guildManager = plugin.getManagers().getGuildManager();
-            Guild guild = guildManager.getGuild(team);
-            if (guild != null) {
-                if (!guildManager.liquidateGuild(guild)) {
+            CompanyManager companyManager = plugin.getManagers().getCompanyManager();
+            Company company = companyManager.getCompany(team);
+            if (company != null) {
+                if (!companyManager.liquidateCompany(company)) {
                     return MethodState.ERROR;
                 }
             }

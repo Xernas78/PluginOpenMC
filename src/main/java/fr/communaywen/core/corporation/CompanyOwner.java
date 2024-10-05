@@ -6,17 +6,17 @@ import lombok.Getter;
 import java.util.UUID;
 
 @Getter
-public class GuildOwner {
+public class CompanyOwner {
 
     private final Team team;
     private final UUID player;
 
-    public GuildOwner(Team team) {
+    public CompanyOwner(Team team) {
         this.team = team;
         this.player = null;
     }
 
-    public GuildOwner(UUID owner) {
+    public CompanyOwner(UUID owner) {
         this.team = null;
         this.player = owner;
     }

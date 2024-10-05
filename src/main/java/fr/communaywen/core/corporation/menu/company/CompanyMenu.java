@@ -1,11 +1,11 @@
-package fr.communaywen.core.corporation.menu.guild;
+package fr.communaywen.core.corporation.menu.company;
 
 import dev.xernas.menulib.PaginatedMenu;
 import dev.xernas.menulib.utils.ItemBuilder;
 import dev.xernas.menulib.utils.ItemUtils;
 import dev.xernas.menulib.utils.StaticSlots;
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.corporation.Guild;
+import fr.communaywen.core.corporation.Company;
 import fr.communaywen.core.corporation.data.MerchantData;
 import fr.communaywen.core.teams.menu.TeamMenu;
 import org.bukkit.Bukkit;
@@ -19,14 +19,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class GuildMenu extends PaginatedMenu {
+public class CompanyMenu extends PaginatedMenu {
 
-    private final Guild guild;
+    private final Company company;
     private final boolean isBackButton;
 
-    public GuildMenu(Player owner, Guild guild, boolean isBackButton) {
+    public CompanyMenu(Player owner, Company company, boolean isBackButton) {
         super(owner);
-        this.guild = guild;
+        this.company = company;
         this.isBackButton = isBackButton;
     }
 
@@ -42,12 +42,12 @@ public class GuildMenu extends PaginatedMenu {
 
     @Override
     public @NotNull List<ItemStack> getItems() {
-        Set<UUID> merchants = guild.getMerchants().keySet();
+        Set<UUID> merchants = company.getMerchants().keySet();
         List<ItemStack> items = new ArrayList<>();
         for (UUID merchant : merchants) {
             items.add(new ItemBuilder(this, ItemUtils.getPlayerSkull(merchant), itemMeta -> {
                 itemMeta.setDisplayName(ChatColor.YELLOW + Bukkit.getOfflinePlayer(merchant).getName());
-                MerchantData merchantData = guild.getMerchants().get(merchant);
+                MerchantData merchantData = company.getMerchants().get(merchant);
                 itemMeta.setLore(List.of(
                         ChatColor.GRAY + "■ A déposé " + ChatColor.GREEN + merchantData.getAllDepositedItemsAmount() + " items",
                         ChatColor.GRAY + "■ A gagné " + ChatColor.GREEN + merchantData.getMoneyWon() + "€"
@@ -68,42 +68,42 @@ public class GuildMenu extends PaginatedMenu {
         buttons.put(50, new ItemBuilder(this, Material.GREEN_CONCRETE, itemMeta -> itemMeta.setDisplayName(ChatColor.GREEN + "Page suivante"))
                 .setNextPageButton());
         ItemStack ownerItem;
-        if (guild.getOwner().isPlayer()) {
-            ownerItem = new ItemBuilder(this, guild.getHead(), itemMeta -> {
-                itemMeta.setDisplayName(ChatColor.BOLD + "" + ChatColor.GOLD + Bukkit.getOfflinePlayer(guild.getOwner().getPlayer()).getName());
+        if (company.getOwner().isPlayer()) {
+            ownerItem = new ItemBuilder(this, company.getHead(), itemMeta -> {
+                itemMeta.setDisplayName(ChatColor.BOLD + "" + ChatColor.GOLD + Bukkit.getOfflinePlayer(company.getOwner().getPlayer()).getName());
                 itemMeta.setLore(List.of(
                         ChatColor.GRAY + "■ - Joueur -",
-                        ChatColor.GRAY + "■ Marchants : " + guild.getMerchants().size()
+                        ChatColor.GRAY + "■ Marchants : " + company.getMerchants().size()
                 ));
             });
         } else {
-            ownerItem = new ItemBuilder(this, guild.getHead(), itemMeta -> {
-                itemMeta.setDisplayName(ChatColor.BOLD + "" + ChatColor.GOLD + guild.getOwner().getTeam().getName());
+            ownerItem = new ItemBuilder(this, company.getHead(), itemMeta -> {
+                itemMeta.setDisplayName(ChatColor.BOLD + "" + ChatColor.GOLD + company.getOwner().getTeam().getName());
                 itemMeta.setLore(List.of(
                         ChatColor.GRAY + "■ - Team -",
-                        ChatColor.GRAY + "■ Marchants : " + guild.getMerchants().size()
+                        ChatColor.GRAY + "■ Marchants : " + company.getMerchants().size()
                 ));
-            }).setNextMenu(new TeamMenu(getOwner(), guild.getOwner().getTeam(), true));
+            }).setNextMenu(new TeamMenu(getOwner(), company.getOwner().getTeam(), true));
         }
         buttons.put(4, ownerItem);
         ItemBuilder bankButton = new ItemBuilder(this, Material.GOLD_INGOT, itemMeta -> {
-            itemMeta.setDisplayName(ChatColor.GOLD + "Banque de guilde");
+            itemMeta.setDisplayName(ChatColor.GOLD + "Banque d'entreprise");
             itemMeta.setLore(List.of(
-                    ChatColor.GRAY + "■ Solde: " + ChatColor.GREEN + guild.getBalance() + "€",
-                    ChatColor.GRAY + "■ Chiffre d'affaires: " + ChatColor.GREEN + guild.getTurnover() + "€",
+                    ChatColor.GRAY + "■ Solde: " + ChatColor.GREEN + company.getBalance() + "€",
+                    ChatColor.GRAY + "■ Chiffre d'affaires: " + ChatColor.GREEN + company.getTurnover() + "€",
                     ChatColor.GRAY + "■ Cliquez pour voir les transactions"
             ));
         });
         ItemBuilder shopsButton = new ItemBuilder(this, Material.BARREL, itemMeta -> {
             itemMeta.setDisplayName(ChatColor.GOLD + "Shops");
             itemMeta.setLore(List.of(
-                    ChatColor.GRAY + "■ Nombre: " + ChatColor.GREEN + guild.getShops().size(),
+                    ChatColor.GRAY + "■ Nombre: " + ChatColor.GREEN + company.getShops().size(),
                     ChatColor.GRAY + "■ Cliquez pour voir les shops"
             ));
         });
-        if (guild.isIn(getOwner().getUniqueId())) {
-            buttons.put(26, bankButton.setNextMenu(new GuildBankTransactionsMenu(getOwner(), guild)));
-            buttons.put(35, shopsButton.setNextMenu(new ShopManageMenu(getOwner(), guild, AywenCraftPlugin.getInstance().getManagers().getGuildManager(), AywenCraftPlugin.getInstance().getManagers().getPlayerShopManager())));
+        if (company.isIn(getOwner().getUniqueId())) {
+            buttons.put(26, bankButton.setNextMenu(new CompanyBankTransactionsMenu(getOwner(), company)));
+            buttons.put(35, shopsButton.setNextMenu(new ShopManageMenu(getOwner(), company, AywenCraftPlugin.getInstance().getManagers().getCompanyManager(), AywenCraftPlugin.getInstance().getManagers().getPlayerShopManager())));
         }
         else {
             buttons.put(26, bankButton);
@@ -114,7 +114,7 @@ public class GuildMenu extends PaginatedMenu {
 
     @Override
     public @NotNull String getName() {
-        return guild.getName();
+        return company.getName();
     }
 
     @Override

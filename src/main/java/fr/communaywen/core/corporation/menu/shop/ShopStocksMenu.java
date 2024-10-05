@@ -4,7 +4,7 @@ import dev.xernas.menulib.MenuLib;
 import dev.xernas.menulib.PaginatedMenu;
 import dev.xernas.menulib.utils.ItemBuilder;
 import dev.xernas.menulib.utils.StaticSlots;
-import fr.communaywen.core.corporation.GuildManager;
+import fr.communaywen.core.corporation.CompanyManager;
 import fr.communaywen.core.corporation.PlayerShopManager;
 import fr.communaywen.core.corporation.Shop;
 import fr.communaywen.core.corporation.ShopItem;
@@ -24,14 +24,14 @@ import java.util.Map;
 
 public class ShopStocksMenu extends PaginatedMenu {
 
-    private final GuildManager guildManager;
+    private final CompanyManager companyManager;
     private final PlayerShopManager playerShopManager;
     private final Shop shop;
     private final int itemIndex;
 
-    public ShopStocksMenu(Player owner, GuildManager guildManager, PlayerShopManager playerShopManager, Shop shop, int itemIndex) {
+    public ShopStocksMenu(Player owner, CompanyManager companyManager, PlayerShopManager playerShopManager, Shop shop, int itemIndex) {
         super(owner);
-        this.guildManager = guildManager;
+        this.companyManager = companyManager;
         this.playerShopManager = playerShopManager;
         this.shop = shop;
         this.itemIndex = itemIndex;
@@ -93,7 +93,7 @@ public class ShopStocksMenu extends PaginatedMenu {
         ItemBuilder nextPageButton = new ItemBuilder(this, Material.GREEN_CONCRETE, itemMeta -> itemMeta.setDisplayName(ChatColor.GREEN + "Page suivante"));
         if ((getPage() == 0 && isLastPage()) || shop.getSales().isEmpty()) {
             buttons.put(48, new ItemBuilder(this, Material.ARROW, itemMeta -> itemMeta.setDisplayName(ChatColor.RED + "Retour"))
-                    .setNextMenu(new ShopMenu(getOwner(), guildManager, playerShopManager, shop, itemIndex)));
+                    .setNextMenu(new ShopMenu(getOwner(), companyManager, playerShopManager, shop, itemIndex)));
             buttons.put(50, nextPageButton);
         } else {
             buttons.put(48, new ItemBuilder(this, Material.RED_CONCRETE, itemMeta -> itemMeta.setDisplayName(ChatColor.RED + "Page précédente"))

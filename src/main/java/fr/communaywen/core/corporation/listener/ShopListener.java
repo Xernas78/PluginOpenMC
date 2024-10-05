@@ -1,7 +1,7 @@
 package fr.communaywen.core.corporation.listener;
 
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.corporation.GuildManager;
+import fr.communaywen.core.corporation.CompanyManager;
 import fr.communaywen.core.corporation.PlayerShopManager;
 import fr.communaywen.core.corporation.Shop;
 import fr.communaywen.core.corporation.menu.shop.ShopMenu;
@@ -19,11 +19,11 @@ import java.util.UUID;
 
 public class ShopListener implements Listener {
 
-    private final GuildManager guildManager;
+    private final CompanyManager companyManager;
     private final PlayerShopManager playerShopManager;
 
-    public ShopListener(GuildManager guildManager, PlayerShopManager playerShopManager) {
-        this.guildManager = guildManager;
+    public ShopListener(CompanyManager companyManager, PlayerShopManager playerShopManager) {
+        this.companyManager = companyManager;
         this.playerShopManager = playerShopManager;
     }
 
@@ -32,7 +32,7 @@ public class ShopListener implements Listener {
     @EventHandler
     public void onShopBreak(BlockBreakEvent event) {
         if (event.getBlock().getState() instanceof Sign sign) {
-            if (sign.getPersistentDataContainer().has(AywenCraftPlugin.GUILD_SHOP_KEY, PersistentDataType.STRING)) {
+            if (sign.getPersistentDataContainer().has(AywenCraftPlugin.COMPANY_SHOP_KEY, PersistentDataType.STRING)) {
                 event.setCancelled(true);
             }
             if (sign.getPersistentDataContainer().has(AywenCraftPlugin.PLAYER_SHOP_KEY, PersistentDataType.STRING)) {
@@ -40,7 +40,7 @@ public class ShopListener implements Listener {
             }
         }
         if (event.getBlock().getState() instanceof Barrel barrel) {
-            if (barrel.getPersistentDataContainer().has(AywenCraftPlugin.GUILD_SHOP_KEY, PersistentDataType.STRING)) {
+            if (barrel.getPersistentDataContainer().has(AywenCraftPlugin.COMPANY_SHOP_KEY, PersistentDataType.STRING)) {
                 event.setCancelled(true);
             }
             if (barrel.getPersistentDataContainer().has(AywenCraftPlugin.PLAYER_SHOP_KEY, PersistentDataType.STRING)) {
@@ -59,9 +59,9 @@ public class ShopListener implements Listener {
                 return;
             }
             Shop shop;
-            if (sign.getPersistentDataContainer().has(AywenCraftPlugin.GUILD_SHOP_KEY, PersistentDataType.STRING)) {
-                UUID shopUUID = UUID.fromString(Objects.requireNonNull(sign.getPersistentDataContainer().get(AywenCraftPlugin.GUILD_SHOP_KEY, PersistentDataType.STRING)));
-                shop = guildManager.getAnyShop(shopUUID);
+            if (sign.getPersistentDataContainer().has(AywenCraftPlugin.COMPANY_SHOP_KEY, PersistentDataType.STRING)) {
+                UUID shopUUID = UUID.fromString(Objects.requireNonNull(sign.getPersistentDataContainer().get(AywenCraftPlugin.COMPANY_SHOP_KEY, PersistentDataType.STRING)));
+                shop = companyManager.getAnyShop(shopUUID);
             }
             else if (sign.getPersistentDataContainer().has(AywenCraftPlugin.PLAYER_SHOP_KEY, PersistentDataType.STRING)) {
                 UUID shopUUID = UUID.fromString(Objects.requireNonNull(sign.getPersistentDataContainer().get(AywenCraftPlugin.PLAYER_SHOP_KEY, PersistentDataType.STRING)));
@@ -74,7 +74,7 @@ public class ShopListener implements Listener {
                 return;
             }
             event.setCancelled(true);
-            ShopMenu menu = new ShopMenu(event.getPlayer(), guildManager, playerShopManager, shop, 0);
+            ShopMenu menu = new ShopMenu(event.getPlayer(), companyManager, playerShopManager, shop, 0);
             menu.open();
         }
     }

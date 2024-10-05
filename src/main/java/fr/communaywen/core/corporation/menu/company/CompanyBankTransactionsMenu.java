@@ -1,9 +1,9 @@
-package fr.communaywen.core.corporation.menu.guild;
+package fr.communaywen.core.corporation.menu.company;
 
 import dev.xernas.menulib.PaginatedMenu;
 import dev.xernas.menulib.utils.ItemBuilder;
 import dev.xernas.menulib.utils.StaticSlots;
-import fr.communaywen.core.corporation.Guild;
+import fr.communaywen.core.corporation.Company;
 import fr.communaywen.core.corporation.data.TransactionData;
 import fr.communaywen.core.economy.EconomyManager;
 import org.bukkit.Bukkit;
@@ -21,13 +21,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GuildBankTransactionsMenu extends PaginatedMenu {
+public class CompanyBankTransactionsMenu extends PaginatedMenu {
 
-    private final Guild guild;
+    private final Company company;
 
-    public GuildBankTransactionsMenu(Player owner, Guild guild) {
+    public CompanyBankTransactionsMenu(Player owner, Company company) {
         super(owner);
-        this.guild = guild;
+        this.company = company;
     }
 
     @Override
@@ -43,8 +43,8 @@ public class GuildBankTransactionsMenu extends PaginatedMenu {
     @Override
     public @NotNull List<ItemStack> getItems() {
         List<ItemStack> items = new ArrayList<>();
-        List<Long> timestamps = new ArrayList<>(guild.getTransactions().getQueue().keySet());
-        List<TransactionData> transactions = new ArrayList<>(guild.getTransactions().getQueue().values());
+        List<Long> timestamps = new ArrayList<>(company.getTransactions().getQueue().keySet());
+        List<TransactionData> transactions = new ArrayList<>(company.getTransactions().getQueue().values());
         for (int i = 0; i < timestamps.size(); i++) {
             long timestamp = timestamps.get(i);
             TransactionData transaction = transactions.get(i);
@@ -72,9 +72,9 @@ public class GuildBankTransactionsMenu extends PaginatedMenu {
         buttons.put(49, new ItemBuilder(this, Material.BARRIER, itemMeta -> itemMeta.setDisplayName(ChatColor.GRAY + "Fermer"))
                 .setCloseButton());
         ItemBuilder nextPageButton = new ItemBuilder(this, Material.GREEN_CONCRETE, itemMeta -> itemMeta.setDisplayName(ChatColor.GREEN + "Page suivante"));
-        if ((getPage() == 0 && isLastPage()) || guild.getShops().isEmpty()) {
+        if ((getPage() == 0 && isLastPage()) || company.getShops().isEmpty()) {
             buttons.put(48, new ItemBuilder(this, Material.ARROW, itemMeta -> itemMeta.setDisplayName(ChatColor.RED + "Retour"))
-                    .setNextMenu(new GuildMenu(getOwner(), guild, false)));
+                    .setNextMenu(new CompanyMenu(getOwner(), company, false)));
             buttons.put(50, nextPageButton);
         } else {
             buttons.put(48, new ItemBuilder(this, Material.RED_CONCRETE, itemMeta -> itemMeta.setDisplayName(ChatColor.RED + "Page précédente"))
@@ -86,7 +86,7 @@ public class GuildBankTransactionsMenu extends PaginatedMenu {
 
     @Override
     public @NotNull String getName() {
-        return "Transactions de la guilde";
+        return "Transactions de l'entreprise";
     }
 
     @Override

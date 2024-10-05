@@ -1,10 +1,10 @@
-package fr.communaywen.core.corporation.menu.guild;
+package fr.communaywen.core.corporation.menu.company;
 
 import dev.xernas.menulib.PaginatedMenu;
 import dev.xernas.menulib.utils.ItemBuilder;
 import dev.xernas.menulib.utils.StaticSlots;
-import fr.communaywen.core.corporation.Guild;
-import fr.communaywen.core.corporation.GuildManager;
+import fr.communaywen.core.corporation.Company;
+import fr.communaywen.core.corporation.CompanyManager;
 import fr.communaywen.core.corporation.PlayerShopManager;
 import fr.communaywen.core.corporation.Shop;
 import fr.communaywen.core.corporation.menu.shop.ShopMenu;
@@ -23,14 +23,14 @@ import java.util.Map;
 
 public class ShopManageMenu extends PaginatedMenu {
 
-    private final Guild guild;
-    private final GuildManager guildManager;
+    private final Company company;
+    private final CompanyManager companyManager;
     private final PlayerShopManager playerShopManager;
 
-    public ShopManageMenu(Player owner, Guild guild, GuildManager guildManager, PlayerShopManager playerShopManager) {
+    public ShopManageMenu(Player owner, Company company, CompanyManager companyManager, PlayerShopManager playerShopManager) {
         super(owner);
-        this.guild = guild;
-        this.guildManager = guildManager;
+        this.company = company;
+        this.companyManager = companyManager;
         this.playerShopManager = playerShopManager;
     }
 
@@ -47,8 +47,8 @@ public class ShopManageMenu extends PaginatedMenu {
     @Override
     public @NotNull List<ItemStack> getItems() {
         List<ItemStack> items = new ArrayList<>();
-        for (Shop shop : guild.getShops()) {
-            items.add(shop.getIcon(this, false).setNextMenu(new ShopMenu(getOwner(), guildManager, playerShopManager, shop, 0)));
+        for (Shop shop : company.getShops()) {
+            items.add(shop.getIcon(this, false).setNextMenu(new ShopMenu(getOwner(), companyManager, playerShopManager, shop, 0)));
         }
         return items;
     }
@@ -59,9 +59,9 @@ public class ShopManageMenu extends PaginatedMenu {
         buttons.put(49, new ItemBuilder(this, Material.BARRIER, itemMeta -> itemMeta.setDisplayName(ChatColor.GRAY + "Fermer"))
                 .setCloseButton());
         ItemBuilder nextPageButton = new ItemBuilder(this, Material.GREEN_CONCRETE, itemMeta -> itemMeta.setDisplayName(ChatColor.GREEN + "Page suivante"));
-        if ((getPage() == 0 && isLastPage()) || guild.getShops().isEmpty()) {
+        if ((getPage() == 0 && isLastPage()) || company.getShops().isEmpty()) {
             buttons.put(48, new ItemBuilder(this, Material.ARROW, itemMeta -> itemMeta.setDisplayName(ChatColor.RED + "Retour"))
-                    .setNextMenu(new GuildMenu(getOwner(), guild, false)));
+                    .setNextMenu(new CompanyMenu(getOwner(), company, false)));
             buttons.put(50, nextPageButton);
         } else {
             buttons.put(48, new ItemBuilder(this, Material.RED_CONCRETE, itemMeta -> itemMeta.setDisplayName(ChatColor.RED + "Page précédente"))

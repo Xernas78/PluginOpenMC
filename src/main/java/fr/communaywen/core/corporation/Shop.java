@@ -60,7 +60,7 @@ public class Shop {
             return;
         }
         if (stockBlock.getState() instanceof Barrel barrel) {
-            if (!barrel.getPersistentDataContainer().has(owner.isGuild() ? AywenCraftPlugin.GUILD_SHOP_KEY : AywenCraftPlugin.PLAYER_SHOP_KEY, PersistentDataType.STRING)) {
+            if (!barrel.getPersistentDataContainer().has(owner.isCompany() ? AywenCraftPlugin.COMPANY_SHOP_KEY : AywenCraftPlugin.PLAYER_SHOP_KEY, PersistentDataType.STRING)) {
                 removeShop();
             }
             Inventory inventory = barrel.getInventory();
@@ -86,16 +86,16 @@ public class Shop {
     }
 
     public String getName() {
-        return owner.isGuild() ? ("Shop #" + index) : Bukkit.getOfflinePlayer(owner.getPlayer()).getName() + "'s Shop";
+        return owner.isCompany() ? ("Shop #" + index) : Bukkit.getOfflinePlayer(owner.getPlayer()).getName() + "'s Shop";
     }
 
     public UUID getSupremeOwner() {
-        return owner.isGuild() ? owner.getGuild().getOwner().getPlayer() : owner.getPlayer();
+        return owner.isCompany() ? owner.getCompany().getOwner().getPlayer() : owner.getPlayer();
     }
 
     public boolean isOwner(UUID uuid) {
-        if (owner.isGuild()) {
-            return owner.getGuild().isOwner(uuid);
+        if (owner.isCompany()) {
+            return owner.getCompany().isOwner(uuid);
         }
         return owner.getPlayer().equals(uuid);
     }
@@ -143,15 +143,15 @@ public class Shop {
 //        }
         item.setAmount(item.getAmount() - amount);
         turnover += item.getPrice(amount);
-        if (owner.isGuild()) {
+        if (owner.isCompany()) {
             double price = item.getPrice(amount);
-            double guildCut = price * 0.40;
-            double supplierCut = price - guildCut;
+            double companyCut = price * 0.40;
+            double supplierCut = price - companyCut;
             UUID supplier = suppliers.get(item.getItemID());
             if (supplier == null) {
                 return MethodState.ESCAPE;
             }
-            owner.getGuild().deposit(guildCut, buyer, "Purchase", getName(), economyManager);
+            owner.getCompany().deposit(companyCut, buyer, "Purchase", getName(), economyManager);
             economyManager.addBalance(supplier, supplierCut);
         }
         else {
@@ -206,7 +206,7 @@ public class Shop {
         return inventory;
     }
 
-    public static UUID getShopPlayerLookingAt(Player player, boolean isGuild, boolean onlySign) {
+    public static UUID getShopPlayerLookingAt(Player player, boolean isCompany, boolean onlySign) {
         Block targetBlock = player.getTargetBlockExact(5);
         //TODO ItemsAdder cash register
         if (targetBlock == null || (targetBlock.getType() != Material.BARREL && targetBlock.getType() != Material.OAK_SIGN)) {
@@ -215,11 +215,11 @@ public class Shop {
         String shopUUID = null;
         if (!onlySign) {
             if (targetBlock.getState() instanceof Barrel barrel) {
-                shopUUID = barrel.getPersistentDataContainer().get(isGuild ? AywenCraftPlugin.GUILD_SHOP_KEY : AywenCraftPlugin.PLAYER_SHOP_KEY, PersistentDataType.STRING);
+                shopUUID = barrel.getPersistentDataContainer().get(isCompany ? AywenCraftPlugin.COMPANY_SHOP_KEY : AywenCraftPlugin.PLAYER_SHOP_KEY, PersistentDataType.STRING);
             }
         }
         else if (targetBlock.getState() instanceof Sign sign) {
-            shopUUID = sign.getPersistentDataContainer().get(isGuild ? AywenCraftPlugin.GUILD_SHOP_KEY : AywenCraftPlugin.PLAYER_SHOP_KEY, PersistentDataType.STRING);
+            shopUUID = sign.getPersistentDataContainer().get(isCompany ? AywenCraftPlugin.COMPANY_SHOP_KEY : AywenCraftPlugin.PLAYER_SHOP_KEY, PersistentDataType.STRING);
         }
         if (shopUUID == null) {
             return null;
@@ -227,7 +227,7 @@ public class Shop {
         return UUID.fromString(shopUUID);
     }
 
-    public void placeShop(Player player, boolean isGuild) {
+    public void placeShop(Player player, boolean isCompany) {
         Yaw yaw = WorldUtils.getYaw(player);
         //TODO ItemsAdder cash register
         cashBlock.setType(Material.OAK_SIGN);
@@ -237,10 +237,10 @@ public class Shop {
             cashBlock.setBlockData(directional);
         }
         Barrel barrel = (Barrel) stockBlock.getState();
-        barrel.getPersistentDataContainer().set(isGuild ? AywenCraftPlugin.GUILD_SHOP_KEY : AywenCraftPlugin.PLAYER_SHOP_KEY, PersistentDataType.STRING, getUuid().toString());
+        barrel.getPersistentDataContainer().set(isCompany ? AywenCraftPlugin.COMPANY_SHOP_KEY : AywenCraftPlugin.PLAYER_SHOP_KEY, PersistentDataType.STRING, getUuid().toString());
         barrel.update();
         Sign sign = (Sign) cashBlock.getState();
-        sign.getPersistentDataContainer().set(isGuild ? AywenCraftPlugin.GUILD_SHOP_KEY : AywenCraftPlugin.PLAYER_SHOP_KEY, PersistentDataType.STRING, getUuid().toString());
+        sign.getPersistentDataContainer().set(isCompany ? AywenCraftPlugin.COMPANY_SHOP_KEY : AywenCraftPlugin.PLAYER_SHOP_KEY, PersistentDataType.STRING, getUuid().toString());
         sign.update();
     }
 
@@ -250,8 +250,8 @@ public class Shop {
             return false;
         }
         Sign sign = (Sign) cashBlock.getState();
-        if (sign.getPersistentDataContainer().has(AywenCraftPlugin.GUILD_SHOP_KEY, PersistentDataType.STRING)) {
-            sign.getPersistentDataContainer().remove(AywenCraftPlugin.GUILD_SHOP_KEY);
+        if (sign.getPersistentDataContainer().has(AywenCraftPlugin.COMPANY_SHOP_KEY, PersistentDataType.STRING)) {
+            sign.getPersistentDataContainer().remove(AywenCraftPlugin.COMPANY_SHOP_KEY);
         }
         else {
             sign.getPersistentDataContainer().remove(AywenCraftPlugin.PLAYER_SHOP_KEY);
@@ -259,8 +259,8 @@ public class Shop {
         cashBlock.setType(Material.AIR);
         sign.update();
         Barrel barrel = (Barrel) stockBlock.getState();
-        if (barrel.getPersistentDataContainer().has(AywenCraftPlugin.GUILD_SHOP_KEY, PersistentDataType.STRING)) {
-            barrel.getPersistentDataContainer().remove(AywenCraftPlugin.GUILD_SHOP_KEY);
+        if (barrel.getPersistentDataContainer().has(AywenCraftPlugin.COMPANY_SHOP_KEY, PersistentDataType.STRING)) {
+            barrel.getPersistentDataContainer().remove(AywenCraftPlugin.COMPANY_SHOP_KEY);
         }
         else {
             barrel.getPersistentDataContainer().remove(AywenCraftPlugin.PLAYER_SHOP_KEY);
@@ -269,10 +269,10 @@ public class Shop {
         return true;
     }
 
-    public static List<Shop> getAllShops(GuildManager guildManager, PlayerShopManager playerShopManager) {
+    public static List<Shop> getAllShops(CompanyManager companyManager, PlayerShopManager playerShopManager) {
         List<Shop> shops = new ArrayList<>();
-        for (Guild guild : guildManager.getGuilds()) {
-            shops.addAll(guild.getShops());
+        for (Company company : companyManager.getCompanies()) {
+            shops.addAll(company.getShops());
         }
         shops.addAll(playerShopManager.getPlayerShops().values());
         return shops;

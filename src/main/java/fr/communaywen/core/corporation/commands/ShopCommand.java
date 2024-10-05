@@ -1,7 +1,7 @@
 package fr.communaywen.core.corporation.commands;
 
 import fr.communaywen.core.corporation.*;
-import fr.communaywen.core.corporation.menu.guild.ShopManageMenu;
+import fr.communaywen.core.corporation.menu.company.ShopManageMenu;
 import fr.communaywen.core.corporation.menu.shop.ShopMenu;
 import fr.communaywen.core.credit.annotations.Credit;
 import fr.communaywen.core.credit.annotations.Feature;
@@ -18,25 +18,25 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Credit("Xernas")
-@Feature("Shops")
+@Feature("Corporations")
 @Command({"shop", "shops"})
 @Description("Manage shops")
 @CommandPermission("ayw.command.shop")
 public class ShopCommand {
 
-    private final GuildManager guildManager;
+    private final CompanyManager companyManager;
     private final PlayerShopManager playerShopManager;
 
-    public ShopCommand(GuildManager guildManager, PlayerShopManager playerShopManager) {
-        this.guildManager = guildManager;
+    public ShopCommand(CompanyManager companyManager, PlayerShopManager playerShopManager) {
+        this.companyManager = companyManager;
         this.playerShopManager = playerShopManager;
     }
 
     @DefaultFor("~")
     public void onCommand(Player player) {
-        boolean isInGuild = guildManager.isInGuild(player.getUniqueId());
-        if (isInGuild) {
-            ShopManageMenu shopManageMenu = new ShopManageMenu(player, guildManager.getGuild(player.getUniqueId()), guildManager, playerShopManager);
+        boolean isInCompany = companyManager.isInCompany(player.getUniqueId());
+        if (isInCompany) {
+            ShopManageMenu shopManageMenu = new ShopManageMenu(player, companyManager.getCompany(player.getUniqueId()), companyManager, playerShopManager);
             shopManageMenu.open();
             return;
         }
@@ -44,14 +44,14 @@ public class ShopCommand {
             player.sendMessage("Usage: /shop <create | manage | sell | unsell | delete> <shop>");
             return;
         }
-        ShopMenu shopMenu = new ShopMenu(player, guildManager, playerShopManager, playerShopManager.getPlayerShop(player.getUniqueId()), 0);
+        ShopMenu shopMenu = new ShopMenu(player, companyManager, playerShopManager, playerShopManager.getPlayerShop(player.getUniqueId()), 0);
         shopMenu.open();
     }
 
     @Subcommand("create")
     @Description("Create a shop")
     public void createShop(Player player) {
-        boolean isInGuild = guildManager.isInGuild(player.getUniqueId());
+        boolean isInCompany = companyManager.isInCompany(player.getUniqueId());
         Block targetBlock = player.getTargetBlockExact(5);
         if (targetBlock == null || targetBlock.getType() != Material.BARREL) {
             player.sendMessage(ChatColor.RED + "Vous devez regarder un tonneau pour créer un shop");
@@ -62,18 +62,18 @@ public class ShopCommand {
             player.sendMessage(ChatColor.RED + "Vous devez liberer de l'espace au dessus de votre tonneau pour créer un shop");
             return;
         }
-        if (isInGuild) {
-            Guild guild = guildManager.getGuild(player.getUniqueId());
-            if (!guild.isOwner(player.getUniqueId())) {
-                player.sendMessage(ChatColor.RED + "Vous devez être un des propriétaires de la guilde pour créer un shop");
+        if (isInCompany) {
+            Company company = companyManager.getCompany(player.getUniqueId());
+            if (!company.isOwner(player.getUniqueId())) {
+                player.sendMessage(ChatColor.RED + "Vous devez être un des propriétaires de l'entreprise pour créer un shop");
                 return;
             }
-            if (!guild.createShop(player, targetBlock, aboveBlock)) {
-                player.sendMessage(ChatColor.RED + "Vous n'avez pas assez d'argent dans la banque de votre guilde pour créer un shop (100€)");
+            if (!company.createShop(player, targetBlock, aboveBlock)) {
+                player.sendMessage(ChatColor.RED + "Vous n'avez pas assez d'argent dans la banque de votre entreprise pour créer un shop (100€)");
                 return;
             }
-            player.sendMessage(ChatColor.GOLD + "[Shop]" + ChatColor.RED + " -100€ sur la banque de la guilde");
-            player.sendMessage(ChatColor.GREEN + "Un shop a bien été crée pour votre guilde !");
+            player.sendMessage(ChatColor.GOLD + "[Shop]" + ChatColor.RED + " -100€ sur la banque de l'entreprise");
+            player.sendMessage(ChatColor.GREEN + "Un shop a bien été crée pour votre entreprise !");
             return;
         }
         if (playerShopManager.hasShop(player.getUniqueId())) {
@@ -91,16 +91,16 @@ public class ShopCommand {
     @Subcommand("sell")
     @Description("Sell an item in your shop")
     public void sellItem(Player player, @Named("price") double price) {
-        boolean isInGuild = guildManager.isInGuild(player.getUniqueId());
-        if (isInGuild) {
-            UUID shopUUID = Shop.getShopPlayerLookingAt(player, isInGuild, false);
+        boolean isInCompany = companyManager.isInCompany(player.getUniqueId());
+        if (isInCompany) {
+            UUID shopUUID = Shop.getShopPlayerLookingAt(player, isInCompany, false);
             if (shopUUID == null) {
                 player.sendMessage(ChatColor.RED + "Shop non reconnu");
                 return;
             }
-            Shop shop = guildManager.getGuild(player.getUniqueId()).getShop(shopUUID);
+            Shop shop = companyManager.getCompany(player.getUniqueId()).getShop(shopUUID);
             if (shop == null) {
-                player.sendMessage(ChatColor.RED + "Ce shop n'appartient pas à votre guilde");
+                player.sendMessage(ChatColor.RED + "Ce shop n'appartient pas à votre entreprise");
                 return;
             }
             ItemStack item = player.getInventory().getItemInMainHand();
@@ -133,16 +133,16 @@ public class ShopCommand {
     @Subcommand("unsell")
     @Description("Unsell an item in your shop")
     public void unsellItem(Player player, @Named("item number") int itemIndex) {
-        boolean isInGuild = guildManager.isInGuild(player.getUniqueId());
-        if (isInGuild) {
-            UUID shopUUID = Shop.getShopPlayerLookingAt(player, isInGuild, false);
+        boolean isInCompany = companyManager.isInCompany(player.getUniqueId());
+        if (isInCompany) {
+            UUID shopUUID = Shop.getShopPlayerLookingAt(player, isInCompany, false);
             if (shopUUID == null) {
                 player.sendMessage(ChatColor.RED + "Shop non reconnu");
                 return;
             }
-            Shop shop = guildManager.getGuild(player.getUniqueId()).getShop(shopUUID);
+            Shop shop = companyManager.getCompany(player.getUniqueId()).getShop(shopUUID);
             if (shop == null) {
-                player.sendMessage(ChatColor.RED + "Ce shop n'appartient pas à votre guilde");
+                player.sendMessage(ChatColor.RED + "Ce shop n'appartient pas à votre entreprise");
                 return;
             }
             if (itemIndex < 1 || itemIndex >= shop.getItems().size() + 1) {
@@ -187,25 +187,25 @@ public class ShopCommand {
     @Subcommand("delete")
     @Description("Delete a shop")
     public void deleteShop(Player player) {
-        boolean isInGuild = guildManager.isInGuild(player.getUniqueId());
-        UUID shopUUID = Shop.getShopPlayerLookingAt(player, isInGuild, false);
+        boolean isInCompany = companyManager.isInCompany(player.getUniqueId());
+        UUID shopUUID = Shop.getShopPlayerLookingAt(player, isInCompany, false);
         if (shopUUID == null) {
             player.sendMessage(ChatColor.RED + "Shop non reconnu");
             return;
         }
-        if (isInGuild) {
-            Shop shop = guildManager.getGuild(player.getUniqueId()).getShop(shopUUID);
+        if (isInCompany) {
+            Shop shop = companyManager.getCompany(player.getUniqueId()).getShop(shopUUID);
             if (shop == null) {
-                player.sendMessage(ChatColor.RED + "Ce shop n'appartient pas à votre guilde");
+                player.sendMessage(ChatColor.RED + "Ce shop n'appartient pas à votre entreprise");
                 return;
             }
-            if (!guildManager.getGuild(player.getUniqueId()).isOwner(player.getUniqueId())) {
-                player.sendMessage(ChatColor.RED + "Vous devez être un des propriétaires de la guilde pour supprimer un shop");
+            if (!companyManager.getCompany(player.getUniqueId()).isOwner(player.getUniqueId())) {
+                player.sendMessage(ChatColor.RED + "Vous devez être un des propriétaires de l'entreprise pour supprimer un shop");
                 return;
             }
-            MethodState deleteState = guildManager.getGuild(player.getUniqueId()).deleteShop(player, shop.getUuid());
+            MethodState deleteState = companyManager.getCompany(player.getUniqueId()).deleteShop(player, shop.getUuid());
             if (deleteState == MethodState.ERROR) {
-                player.sendMessage(ChatColor.RED + "Ce shop n'existe pas dans votre guilde");
+                player.sendMessage(ChatColor.RED + "Ce shop n'existe pas dans votre entreprise");
                 return;
             }
             if (deleteState == MethodState.WARNING) {
@@ -213,14 +213,14 @@ public class ShopCommand {
                 return;
             }
             if (deleteState == MethodState.SPECIAL) {
-                player.sendMessage(ChatColor.RED + "Il vous faut au minimum le nombre d'argent remboursable pour supprimer un shop et obtenir un remboursement dans la banque de votre guilde");
+                player.sendMessage(ChatColor.RED + "Il vous faut au minimum le nombre d'argent remboursable pour supprimer un shop et obtenir un remboursement dans la banque de votre entreprise");
                 return;
             }
             if (deleteState == MethodState.ESCAPE) {
                 player.sendMessage(ChatColor.RED + "Caisse introuvable (appelez un admin)");
             }
             player.sendMessage(ChatColor.GREEN + shop.getName() + " supprimé !");
-            player.sendMessage(ChatColor.GOLD + "[Shop]" + ChatColor.GREEN + " +75€ de remboursés sur la banque de la guilde");
+            player.sendMessage(ChatColor.GOLD + "[Shop]" + ChatColor.GREEN + " +75€ de remboursés sur la banque de l'entreprise");
         }
         if (!playerShopManager.hasShop(player.getUniqueId())) {
             player.sendMessage(ChatColor.RED + "Vous n'avez pas de shop");
@@ -242,9 +242,9 @@ public class ShopCommand {
     @Subcommand("manage")
     @Description("Manage a shop")
     public void manageShop(Player player) {
-        boolean isInGuild = guildManager.isInGuild(player.getUniqueId());
-        if (isInGuild) {
-            ShopManageMenu shopManageMenu = new ShopManageMenu(player, guildManager.getGuild(player.getUniqueId()), guildManager, playerShopManager);
+        boolean isInCompany = companyManager.isInCompany(player.getUniqueId());
+        if (isInCompany) {
+            ShopManageMenu shopManageMenu = new ShopManageMenu(player, companyManager.getCompany(player.getUniqueId()), companyManager, playerShopManager);
             shopManageMenu.open();
             return;
         }
@@ -252,7 +252,7 @@ public class ShopCommand {
             player.sendMessage(ChatColor.RED + "Vous n'avez pas de shop");
             return;
         }
-        ShopMenu shopMenu = new ShopMenu(player, guildManager, playerShopManager, playerShopManager.getPlayerShop(player.getUniqueId()), 0);
+        ShopMenu shopMenu = new ShopMenu(player, companyManager, playerShopManager, playerShopManager.getPlayerShop(player.getUniqueId()), 0);
         shopMenu.open();
     }
 

@@ -2,7 +2,6 @@ package fr.communaywen.core.teams;
 
 import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.corporation.Guild;
 import fr.communaywen.core.teams.cache.TeamCache;
 import fr.communaywen.core.teams.utils.MethodState;
 import fr.communaywen.core.utils.serializer.BukkitSerializer;

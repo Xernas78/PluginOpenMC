@@ -22,7 +22,7 @@ public class TeamUtils {
         if (state == MethodState.ERROR)
             return CommandUtils.sendMessage(player, ChatColor.DARK_RED + "Impossible de quitter, la team serait supprimée et il reste des items dans l'inventaire !", true);
         if (state == MethodState.SPECIAL)
-            return CommandUtils.sendMessage(player, ChatColor.DARK_RED + "Impossible de quitter, votre team possède une guilde et elle serait supprimée, si l'erreur persiste veuillez contacter un admin, modo ou manager !", true);
+            return CommandUtils.sendMessage(player, ChatColor.DARK_RED + "Impossible de quitter, votre team possède une entreprise et elle serait supprimée, si l'erreur persiste veuillez contacter un admin, modo ou manager !", true);
         for (UUID teamPlayer : team.getPlayers()) {
             Player teamPlayerOnline = Bukkit.getPlayer(teamPlayer);
             if (teamPlayerOnline != null) {

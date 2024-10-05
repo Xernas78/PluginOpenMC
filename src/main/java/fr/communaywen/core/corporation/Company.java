@@ -16,7 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.*;
 
 @Getter
-public class Guild {
+public class Company {
 
     private final String name;
     private final EconomyManager economyManager;
@@ -24,12 +24,12 @@ public class Guild {
     private final List<Shop> shops = new ArrayList<>();
     private final Queue<Long, TransactionData> transactions = new Queue<>(150);
     private final double turnover = 0;
-    private GuildOwner owner;
+    private CompanyOwner owner;
     private double balance = 0;
 
     private int shopCounter = 0;
 
-    public Guild(String name, GuildOwner owner, EconomyManager economyManager) {
+    public Company(String name, CompanyOwner owner, EconomyManager economyManager) {
         this.name = name;
         this.owner = owner;
         this.economyManager = economyManager;
@@ -119,7 +119,7 @@ public class Guild {
         removeMerchant(uuid);
         Player player = Bukkit.getPlayer(uuid);
         if (player != null) {
-            player.sendMessage(ChatColor.RED + "Vous avez été renvoyé de la guilde " + name);
+            player.sendMessage(ChatColor.RED + "Vous avez été renvoyé de l'entreprise' " + name);
         }
     }
 
@@ -169,7 +169,7 @@ public class Guild {
     }
 
     public void setOwner(UUID uuid) {
-        owner = new GuildOwner(uuid);
+        owner = new CompanyOwner(uuid);
     }
 
     public ItemStack getHead() {

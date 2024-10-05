@@ -42,7 +42,7 @@ import fr.communaywen.core.contest.ContestListener;
 import fr.communaywen.core.contest.ContestManager;
 import fr.communaywen.core.contest.FirerocketSpawnListener;
 import fr.communaywen.core.corporation.Shop;
-import fr.communaywen.core.corporation.commands.GuildCommand;
+import fr.communaywen.core.corporation.commands.CompanyCommand;
 import fr.communaywen.core.corporation.commands.ShopCommand;
 import fr.communaywen.core.corporation.listener.ShopListener;
 import fr.communaywen.core.customitems.commands.ShowCraftCommand;
@@ -96,7 +96,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
@@ -120,7 +119,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
     public static ArrayList<Player> frozenPlayers = new ArrayList<>();
     public static ArrayList<Player> playerClaimsByPass = new ArrayList<>();
 
-    public static NamespacedKey GUILD_SHOP_KEY;
+    public static NamespacedKey COMPANY_SHOP_KEY;
     public static NamespacedKey PLAYER_SHOP_KEY;
     public static NamespacedKey SUPPLIER_KEY;
 
@@ -173,7 +172,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
         // Gardez les au début sinon ça pète tout
         instance = this;
 
-        GUILD_SHOP_KEY = new NamespacedKey(this, "shop_guild");
+        COMPANY_SHOP_KEY = new NamespacedKey(this, "shop_company");
         PLAYER_SHOP_KEY = new NamespacedKey(this, "shop_player");
         SUPPLIER_KEY = new NamespacedKey(this, "supplier");
 
@@ -361,8 +360,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new QuestsCommands(),
                 new RewardCommand(this),
                 new FeatureCommand(managers.getFeatureManager()),
-                new GuildCommand(managers.getGuildManager(), managers.getTeamManager(), managers.getEconomyManager(), managers.getPlayerShopManager()),
-                new ShopCommand(managers.getGuildManager(), managers.getPlayerShopManager()),
+                new CompanyCommand(managers.getCompanyManager(), managers.getTeamManager(), managers.getEconomyManager(), managers.getPlayerShopManager()),
+                new ShopCommand(managers.getCompanyManager(), managers.getPlayerShopManager()),
                 new MineCommand(),
                 new AdminShopCommand(),
                 new PayCommands(),
@@ -406,7 +405,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                         }
                     }
                 }
-                List<Shop> allShops = Shop.getAllShops(managers.getGuildManager(), managers.getPlayerShopManager());
+                List<Shop> allShops = Shop.getAllShops(managers.getCompanyManager(), managers.getPlayerShopManager());
                 for (Shop shop : allShops) {
                     shop.checkStock();
                 }
@@ -458,7 +457,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new LBBlockBreakListener(managers.getLuckyBlockManager()),
                 new LBPlayerQuitListener(managers.getLuckyBlockManager()),
                 new LBPlayerInteractListener(managers.getLuckyBlockManager()),
-                new ShopListener(managers.getGuildManager(), managers.getPlayerShopManager()),
+                new ShopListener(managers.getCompanyManager(), managers.getPlayerShopManager()),
                 new LBEntityDeathListener(managers.getLuckyBlockManager())
         );
 
