@@ -1,7 +1,10 @@
 package fr.communaywen.core.luckyblocks.enums;
 
+<<<<<<< HEAD
 import fr.communaywen.core.credit.annotations.Credit;
 import fr.communaywen.core.credit.annotations.Feature;
+=======
+>>>>>>> upstream/main
 import fr.communaywen.core.utils.constant.Prefix;
 import lombok.Getter;
 import org.bukkit.ChatColor;
@@ -9,8 +12,6 @@ import org.bukkit.Sound;
 
 import java.util.Random;
 
-@Feature("Lucky Blocks")
-@Credit("Fnafgameur")
 @Getter
 public enum EventType {
 

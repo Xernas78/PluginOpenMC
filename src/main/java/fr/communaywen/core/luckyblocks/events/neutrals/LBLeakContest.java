@@ -1,8 +1,13 @@
 package fr.communaywen.core.luckyblocks.events.neutrals;
 
+<<<<<<< HEAD
 import fr.communaywen.core.contest.ContestManager;
 import fr.communaywen.core.credit.annotations.Credit;
 import fr.communaywen.core.credit.annotations.Feature;
+=======
+import fr.communaywen.core.contest.cache.ContestCache;
+import fr.communaywen.core.contest.managers.ContestManager;
+>>>>>>> upstream/main
 import fr.communaywen.core.luckyblocks.enums.EventType;
 import fr.communaywen.core.luckyblocks.objects.LuckyBlockEvent;
 import fr.communaywen.core.utils.constant.MessageManager;
@@ -14,11 +19,9 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-@Feature("Lucky Blocks")
-@Credit("Fnafgameur")
 public class LBLeakContest extends LuckyBlockEvent {
-
-    public LBLeakContest() {
+    private final ContestManager contestManager;
+    public LBLeakContest(ContestManager contestManager) {
         super(
                 "leak_contest",
                 "Un Bug du Serveur?",
@@ -27,14 +30,15 @@ public class LBLeakContest extends LuckyBlockEvent {
                 EventType.NEUTRAL,
                 new ItemStack(Material.EMERALD)
         );
+        this.contestManager = contestManager;
     }
 
     @Override
     public void onOpen(Player player, Block block) {
         super.onOpen(player, block);
 
-        if (ContestManager.getPhaseCache() == 1) {
-            MessageManager.sendMessageType(player, "§9Accès §aAccepté§9... Requête à la base de donnée... " + ChatColor.valueOf(ContestManager.getColor1Cache()) + ContestManager.getCamp1Cache() + " §9VS " + ChatColor.valueOf(ContestManager.getColor2Cache()) + ContestManager.getCamp2Cache(), Prefix.CONTEST, MessageType.SUCCESS, true);
+        if (ContestCache.getPhaseCache() == 1) {
+            MessageManager.sendMessageType(player, "§9Accès §aAccepté§9... Requête à la base de donnée... " + ChatColor.valueOf(ContestCache.getColor1Cache()) + ContestCache.getCamp1Cache() + " §9VS " + ChatColor.valueOf(ContestCache.getColor2Cache()) + ContestCache.getCamp2Cache(), Prefix.CONTEST, MessageType.SUCCESS, true);
         } else {
             MessageManager.sendMessageType(player, "§9Accès refusé... Vous avez déjà accès au Thème du Contest", Prefix.CONTEST, MessageType.ERROR, true);
 

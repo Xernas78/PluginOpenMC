@@ -7,14 +7,15 @@ import fr.communaywen.core.adminshop.menu.category.defaults.MiscItems;
 import fr.communaywen.core.adminshop.menu.category.defaults.OresItems;
 import fr.communaywen.core.adminshop.shopinterfaces.BaseItems;
 import fr.communaywen.core.adminshop.shopinterfaces.BaseShop;
+<<<<<<< HEAD
 import fr.communaywen.core.credit.annotations.Credit;
 import fr.communaywen.core.credit.annotations.Feature;
+=======
+>>>>>>> upstream/main
 import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
-@Credit("Axeno")
-@Feature("AdminShop")
 @Getter
 public enum AdminShopCategory {
     BLOCKS(Material.GRASS_BLOCK, "§a§lBlocks", BlocksItems.values()),

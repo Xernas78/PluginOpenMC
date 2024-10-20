@@ -2,12 +2,13 @@ package fr.communaywen.core.adminshop.menu.category.defaults;
 
 import fr.communaywen.core.adminshop.shopinterfaces.BaseItems;
 import fr.communaywen.core.adminshop.menu.category.ShopType;
+<<<<<<< HEAD
 import fr.communaywen.core.credit.annotations.Credit;
 import fr.communaywen.core.credit.annotations.Feature;
+=======
+>>>>>>> upstream/main
 import org.bukkit.Material;
 
-@Credit("Axeno")
-@Feature("AdminShop")
 public enum BlocksItems implements BaseItems {
     WHITE_CONCRETE_POWDER(12, 2, ShopType.WHITE_CONCRETE_POWDER, "§7Béton en poudre"),
     WHITE_WOOL(13, 2, ShopType.WHITE_WOOL, "§7Laine"),

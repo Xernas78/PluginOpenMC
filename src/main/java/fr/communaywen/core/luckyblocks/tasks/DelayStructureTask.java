@@ -1,7 +1,10 @@
 package fr.communaywen.core.luckyblocks.tasks;
 
+<<<<<<< HEAD
 import fr.communaywen.core.credit.annotations.Credit;
 import fr.communaywen.core.credit.annotations.Feature;
+=======
+>>>>>>> upstream/main
 import fr.communaywen.core.luckyblocks.utils.Structure;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -10,8 +13,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.io.File;
 import java.io.IOException;
 
-@Feature("Lucky Blocks")
-@Credit("Fnafgameur")
 public class DelayStructureTask extends BukkitRunnable {
 
     private final File file;

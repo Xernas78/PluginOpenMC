@@ -1,7 +1,10 @@
 package fr.communaywen.core.luckyblocks.events.bonus;
 
+<<<<<<< HEAD
 import fr.communaywen.core.credit.annotations.Credit;
 import fr.communaywen.core.credit.annotations.Feature;
+=======
+>>>>>>> upstream/main
 import fr.communaywen.core.luckyblocks.enums.EventType;
 import fr.communaywen.core.luckyblocks.objects.LuckyBlockEvent;
 import org.bukkit.Material;
@@ -10,8 +13,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-@Feature("Lucky Blocks")
-@Credit("Fnafgameur")
 public class LBEnderchest extends LuckyBlockEvent {
 
     public LBEnderchest() {

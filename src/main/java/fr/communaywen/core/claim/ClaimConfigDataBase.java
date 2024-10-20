@@ -5,7 +5,6 @@ import fr.communaywen.core.teams.Team;
 import fr.communaywen.core.utils.database.DatabaseConnector;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

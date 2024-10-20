@@ -1,7 +1,10 @@
 package fr.communaywen.core.luckyblocks.objects;
 
+<<<<<<< HEAD
 import fr.communaywen.core.credit.annotations.Credit;
 import fr.communaywen.core.credit.annotations.Feature;
+=======
+>>>>>>> upstream/main
 import fr.communaywen.core.luckyblocks.enums.EventType;
 import fr.communaywen.core.utils.constant.MessageManager;
 import fr.communaywen.core.utils.constant.MessageType;
@@ -13,8 +16,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-@Feature("Lucky Blocks")
-@Credit("Fnafgameur")
 /*
 * Credit to "mcross_bow_voc" for the idea
 * Credit to every member that'll contribute by adding new events

@@ -1,6 +1,9 @@
 package fr.communaywen.core.luckyblocks.events.malus;
 
+<<<<<<< HEAD
 import fr.communaywen.core.credit.annotations.Credit;
+=======
+>>>>>>> upstream/main
 import fr.communaywen.core.luckyblocks.enums.EventType;
 import fr.communaywen.core.luckyblocks.objects.LuckyBlockEvent;
 import org.bukkit.Material;
@@ -10,7 +13,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-@Credit("Fnafgameur")
 public class LBSuperZero extends LuckyBlockEvent {
 
     public LBSuperZero() {

@@ -19,8 +19,6 @@ import revxrsal.commands.bukkit.annotation.CommandPermission;
 import java.util.Random;
 import java.util.UUID;
 
-@Feature("Lucky Blocks")
-@Credit("Fnafgameur")
 @Command({"luckyblock", "lb"})
 public class LuckyBlockCommand {
 

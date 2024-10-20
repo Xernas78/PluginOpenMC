@@ -1,7 +1,11 @@
 package fr.communaywen.core.listeners;
 
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.contest.ContestManager;
+import fr.communaywen.core.contest.cache.ContestCache;
+import fr.communaywen.core.luckyblocks.managers.LBPlayerManager;
+import fr.communaywen.core.luckyblocks.utils.LBReminder;
+import fr.communaywen.core.managers.LeaderboardManager;
+import fr.communaywen.core.managers.RegionsManager;
 import fr.communaywen.core.utils.DraftAPI;
 import fr.communaywen.core.utils.LinkerAPI;
 import net.luckperms.api.LuckPerms;
@@ -9,6 +13,8 @@ import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.Node;
 import net.luckperms.api.query.QueryOptions;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -51,6 +57,9 @@ public class OnPlayers implements Listener {
         event.setJoinMessage("§8[§a+§8] §r" + (userlp.getCachedData().getMetaData(queryOptions).getPrefix() != null ? userlp.getCachedData().getMetaData(queryOptions).getPrefix().replace("&", "§") : "") + "" + player.getName());
 
         Bukkit.getScheduler().runTaskAsynchronously(AywenCraftPlugin.getInstance(), () -> {
+            long timePlayed = player.getStatistic(Statistic.PLAY_ONE_MINUTE);
+            LeaderboardManager.setTimePlayed(player, timePlayed);
+
             DraftAPI draftAPI = new DraftAPI();
 
             JSONObject data = null;
@@ -70,7 +79,12 @@ public class OnPlayers implements Listener {
                 player.sendMessage("Profitez de récompenses en liant votre compte Discord à Minecraft");
             }
 
-            if(ContestManager.getPhaseCache() == 2) {
+            LBPlayerManager playerManager = AywenCraftPlugin.getInstance().getManagers().getLbPlayerManager();
+            LBReminder reminder = new LBReminder(player, playerManager, AywenCraftPlugin.getInstance());
+
+            reminder.startReminder();
+
+            if(ContestCache.getPhaseCache() == 2) {
                 player.sendMessage(
                         "§8§m                                                     §r\n" +
                                 "§7\n" +
@@ -82,7 +96,7 @@ public class OnPlayers implements Listener {
                 );
                 return;
             }
-            if(ContestManager.getPhaseCache() == 3) {
+            if(ContestCache.getPhaseCache() == 3) {
                 player.sendMessage(
                         "§8§m                                                     §r\n" +
                                 "§7\n" +
@@ -134,5 +148,17 @@ public class OnPlayers implements Listener {
         QueryOptions queryOptions = AywenCraftPlugin.getInstance().api.getContextManager().getQueryOptions(userlp).orElse(QueryOptions.defaultContextualOptions());
 
         event.setQuitMessage("§8[§c-§8] §r" + (userlp.getCachedData().getMetaData(queryOptions).getPrefix() != null ? userlp.getCachedData().getMetaData(queryOptions).getPrefix().replace("&", "§") : "") + "" + player.getName());
+
+
+        Bukkit.getScheduler().runTaskAsynchronously(AywenCraftPlugin.getInstance(), () -> {
+            long timePlayed = player.getStatistic(Statistic.PLAY_ONE_MINUTE);
+            LeaderboardManager.setTimePlayed(player, timePlayed);
+
+            LBReminder reminder = new LBReminder(player, AywenCraftPlugin.getInstance().getManagers().getLbPlayerManager(), AywenCraftPlugin.getInstance());
+
+            reminder.stopReminder();
+
+        });
     }
+
 }

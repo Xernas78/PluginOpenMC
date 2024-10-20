@@ -1,13 +1,13 @@
 package fr.communaywen.core.utils.constant;
 
+<<<<<<< HEAD
 import fr.communaywen.core.credit.annotations.Credit;
 import fr.communaywen.core.credit.annotations.Feature;
+=======
+>>>>>>> upstream/main
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
-
-@Feature("beautiful-message")
-@Credit("Axeno")
 public class MessageManager {
 
 
@@ -99,6 +99,46 @@ public class MessageManager {
                 break;
         }
         return soundType;
+    }
+
+    public static String textToSmall(String text) {
+        StringBuilder result = new StringBuilder();
+        String smallLetters = "ᴀʙᴄᴅᴇꜰɢʜɪᴊᴋʟᴍɴᴏᴘǫʀѕᴛᴜᴠᴡхʏᴢ";
+        String normalLetters = "abcdefghijklmnopqrstuvwxyz";
+        String normalLettersCaps = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String numbers = "₁₂₃₄₅₆₇₈₉₀";
+        String numbersNormal = "1234567890";
+
+        if (text.contains("§")) {
+            String[] split = text.split("§");
+            for (int i = 0; i < split.length; i++) {
+                if (i == 0) {
+                    result.append(split[i]);
+                    continue;
+                }
+                if (split[i].length() > 1) {
+                    result.append("§" + split[i].charAt(0) + textToSmall(split[i].substring(1)));
+                } else {
+                    result.append("§" + split[i]);
+                }
+            }
+            return result.toString();
+        }
+
+        for (char c : text.toCharArray()) {
+
+            if (normalLetters.indexOf(c) != -1) {
+                result.append(smallLetters.charAt(normalLetters.indexOf(c)));
+            } else if (normalLettersCaps.indexOf(c) != -1) {
+                result.append(smallLetters.charAt(normalLettersCaps.indexOf(c)));
+            } else if (numbersNormal.indexOf(c) != -1) {
+                result.append(numbers.charAt(numbersNormal.indexOf(c)));
+            } else {
+                result.append(c);
+            }
+        }
+
+        return result.toString();
     }
 
 }

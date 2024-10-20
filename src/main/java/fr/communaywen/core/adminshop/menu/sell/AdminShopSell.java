@@ -6,8 +6,11 @@ import dev.xernas.menulib.utils.InventorySize;
 import dev.xernas.menulib.utils.ItemBuilder;
 import fr.communaywen.core.adminshop.menu.category.ShopType;
 import fr.communaywen.core.adminshop.shopinterfaces.BaseItems;
+<<<<<<< HEAD
 import fr.communaywen.core.credit.annotations.Credit;
 import fr.communaywen.core.credit.annotations.Feature;
+=======
+>>>>>>> upstream/main
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -22,8 +25,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
+<<<<<<< HEAD
 @Credit("Axeno")
 @Feature("AdminShop")
+=======
+>>>>>>> upstream/main
 public class AdminShopSell extends Menu {
     BaseItems items;
     private final AtomicInteger number;

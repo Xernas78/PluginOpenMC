@@ -1,27 +1,19 @@
 package fr.communaywen.core.claim;
 
-import java.sql.SQLException;
 import java.util.*;
 
 import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.utils.constant.MessageManager;
 import fr.communaywen.core.utils.constant.MessageType;
 import fr.communaywen.core.utils.constant.Prefix;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.block.Container;
 import org.bukkit.block.data.Openable;
 import org.bukkit.block.data.type.*;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
+import org.bukkit.event.*;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
@@ -39,7 +31,6 @@ import org.bukkit.inventory.ItemStack;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.teams.EconomieTeam;
 import fr.communaywen.core.teams.Team;
-import org.bukkit.material.RedstoneTorch;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class ClaimListener implements Listener {
@@ -366,6 +357,18 @@ public class ClaimListener implements Listener {
                     gp.setPos1(null);
                     gp.setPos2(null);
                 }
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        if(event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            if (event.getMaterial() == CustomStack.getInstance("thor:hammer").getItemStack().getType()) {
+                if (!player.isSneaking()) return;
+
+                checkRegion(player, event.getClickedBlock(), event);
             }
         }
     }

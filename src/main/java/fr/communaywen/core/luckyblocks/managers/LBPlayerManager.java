@@ -1,14 +1,15 @@
 package fr.communaywen.core.luckyblocks.managers;
 
+<<<<<<< HEAD
 
 import fr.communaywen.core.credit.annotations.Credit;
 import fr.communaywen.core.credit.annotations.Feature;
 
+=======
+>>>>>>> upstream/main
 import java.util.HashMap;
 import java.util.UUID;
 
-@Feature("Lucky Blocks")
-@Credit("Fnafgameur")
 public class LBPlayerManager {
 
     private final long timeToWait = 86400000; // = 1 jour

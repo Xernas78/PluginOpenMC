@@ -1,7 +1,10 @@
 package fr.communaywen.core.luckyblocks.events.neutrals;
 
+<<<<<<< HEAD
 import fr.communaywen.core.credit.annotations.Credit;
 import fr.communaywen.core.credit.annotations.Feature;
+=======
+>>>>>>> upstream/main
 import fr.communaywen.core.luckyblocks.enums.EventType;
 import fr.communaywen.core.luckyblocks.objects.LuckyBlockEvent;
 import fr.communaywen.core.luckyblocks.utils.Structure;
@@ -13,8 +16,6 @@ import org.bukkit.inventory.ItemStack;
 import java.io.File;
 import java.io.IOException;
 
-@Feature("Lucky Blocks")
-@Credit("Fnafgameur")
 public class LBStructureHerobrine extends LuckyBlockEvent {
 
     private final File file = Structure.getStructureFile("lb_herobrine");

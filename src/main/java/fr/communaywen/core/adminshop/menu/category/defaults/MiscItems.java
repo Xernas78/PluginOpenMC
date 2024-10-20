@@ -2,12 +2,13 @@ package fr.communaywen.core.adminshop.menu.category.defaults;
 
 import fr.communaywen.core.adminshop.shopinterfaces.BaseItems;
 import fr.communaywen.core.adminshop.menu.category.ShopType;
+<<<<<<< HEAD
 import fr.communaywen.core.credit.annotations.Credit;
 import fr.communaywen.core.credit.annotations.Feature;
+=======
+>>>>>>> upstream/main
 import org.bukkit.Material;
 
-@Credit("Axeno")
-@Feature("AdminShop")
 public enum MiscItems implements BaseItems {
 
     GLOWSTONE_DUST(13, 3, ShopType.SELL_BUY, "§7Poudre lumineuse"),

@@ -1,14 +1,14 @@
 package fr.communaywen.core.adminshop.menu.category.defaults;
 
-import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.adminshop.shopinterfaces.BaseItems;
 import fr.communaywen.core.adminshop.menu.category.ShopType;
+<<<<<<< HEAD
 import fr.communaywen.core.credit.annotations.Credit;
 import fr.communaywen.core.credit.annotations.Feature;
+=======
+>>>>>>> upstream/main
 import org.bukkit.Material;
 
-@Credit("Axeno")
-@Feature("AdminShop")
 public enum OresItems implements BaseItems {
     COAL(13, 3, ShopType.SELL_BUY, "§7Charbon"),
     COPPER_INGOT(20, 4, ShopType.SELL_BUY, "§7Lingot de cuivre"),
