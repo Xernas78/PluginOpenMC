@@ -99,17 +99,10 @@ public class ScoreboardManager {
             objective.getScore("§8• §fVol§7: §a" + flytime).setScore(12);
         }
 
-<<<<<<< HEAD
-        objective.getScore("§8• §fGrade§7: §r" + (userlp.getCachedData().getMetaData(queryOptions).getPrefix() != null ? userlp.getCachedData().getMetaData(queryOptions).getPrefix().replace("&", "§") : "§7Aucun grade")).setScore(8);
-        objective.getScore("§8• §fArgent§7: §6" + plugin.getManagers().getEconomyManager().getBalance(player.getUniqueId())).setScore(7);
-        objective.getScore("   ").setScore(6);
-        objective.getScore("§8• §fTeam§7: " + (teambool ? "§a" + teamName.getName() : "§7Aucune team.")).setScore(5);
-=======
         objective.getScore("§8• §fGrade§7: §r" + (userlp.getCachedData().getMetaData(queryOptions).getPrefix() != null ? userlp.getCachedData().getMetaData(queryOptions).getPrefix().replace("&", "§") : "§7Aucun grade")).setScore(11);
-        objective.getScore("§8• §fArgent§7: §6" + plugin.getManagers().getEconomyManager().getBalance(player)).setScore(10);
+        objective.getScore("§8• §fArgent§7: §6" + plugin.getManagers().getEconomyManager().getBalance(player.getUniqueId())).setScore(10);
         objective.getScore("   ").setScore(9);
         objective.getScore("§8• §fTeam§7: " + (teambool ? "§a" + teamName.getName() : "§7Aucune team.")).setScore(8);
->>>>>>> upstream/main
 
         if (RegionsManager.isSpecifiedPlayerInRegion(player,"spawn")) {
             int heads = HeadManager.getHeadFoundIntCache(player);

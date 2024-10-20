@@ -103,6 +103,9 @@ public class ShopCommand {
                 player.sendMessage(ChatColor.RED + "Ce shop n'appartient pas à votre entreprise");
                 return;
             }
+            if (!shop.isOwner(player.getUniqueId())) {
+                player.sendMessage(ChatColor.RED + "Vous n'êtes pas un des propriétaires de ce shop");
+            }
             ItemStack item = player.getInventory().getItemInMainHand();
             boolean itemThere = shop.addItem(item, price);
             if (itemThere) {
@@ -143,6 +146,10 @@ public class ShopCommand {
             Shop shop = companyManager.getCompany(player.getUniqueId()).getShop(shopUUID);
             if (shop == null) {
                 player.sendMessage(ChatColor.RED + "Ce shop n'appartient pas à votre entreprise");
+                return;
+            }
+            if (!shop.isOwner(player.getUniqueId())) {
+                player.sendMessage(ChatColor.RED + "Vous n'êtes pas un des propriétaires de ce shop");
                 return;
             }
             if (itemIndex < 1 || itemIndex >= shop.getItems().size() + 1) {
@@ -201,6 +208,10 @@ public class ShopCommand {
             }
             if (!companyManager.getCompany(player.getUniqueId()).isOwner(player.getUniqueId())) {
                 player.sendMessage(ChatColor.RED + "Vous devez être un des propriétaires de l'entreprise pour supprimer un shop");
+                return;
+            }
+            if (shop.isOwner(player.getUniqueId())) {
+                player.sendMessage(ChatColor.RED + "Vous n'êtes pas un des propriétaires de ce shop");
                 return;
             }
             MethodState deleteState = companyManager.getCompany(player.getUniqueId()).deleteShop(player, shop.getUuid());

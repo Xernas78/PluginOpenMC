@@ -79,6 +79,14 @@ public class Shop {
                     if (supplierUUID == null) {
                         continue;
                     }
+                    List<UUID> possibleSuppliers = new ArrayList<>();
+                    if (owner.isCompany()) {
+                        possibleSuppliers.addAll(owner.getCompany().getAllMembers());
+                    }
+                    if (owner.isPlayer()) possibleSuppliers.add(owner.getPlayer());
+                    if (!possibleSuppliers.contains(UUID.fromString(supplierUUID))) {
+                        continue;
+                    }
                     boolean supplied = supply(item, UUID.fromString(supplierUUID));
                     if (supplied) inventory.remove(item);
                 }

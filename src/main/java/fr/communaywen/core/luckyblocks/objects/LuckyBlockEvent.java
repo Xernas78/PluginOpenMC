@@ -1,10 +1,5 @@
 package fr.communaywen.core.luckyblocks.objects;
 
-<<<<<<< HEAD
-import fr.communaywen.core.credit.annotations.Credit;
-import fr.communaywen.core.credit.annotations.Feature;
-=======
->>>>>>> upstream/main
 import fr.communaywen.core.luckyblocks.enums.EventType;
 import fr.communaywen.core.utils.constant.MessageManager;
 import fr.communaywen.core.utils.constant.MessageType;

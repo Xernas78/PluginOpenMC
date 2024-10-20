@@ -1,8 +1,8 @@
 package fr.communaywen.core.commands.spawn.leaderboard;
 
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
+import fr.communaywen.core.credit.annotations.Credit;
+import fr.communaywen.core.credit.annotations.Feature;
 import fr.communaywen.core.managers.LeaderboardManager;
 import fr.communaywen.core.spawn.head.HeadManager;
 import fr.communaywen.core.spawn.jump.JumpManager;

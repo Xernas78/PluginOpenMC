@@ -6,6 +6,7 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDispla
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
 import com.fren_gor.ultimateAdvancementAPI.visibilities.VanillaVisibility;
 import dev.lone.itemsadder.api.CustomStack;
+import fr.communaywen.core.utils.ItemsAdderUtils;
 import org.jetbrains.annotations.NotNull;
 
 public class PlankAdvDream extends BaseAdvancement implements VanillaVisibility {
@@ -13,7 +14,7 @@ public class PlankAdvDream extends BaseAdvancement implements VanillaVisibility 
         super(
                 "planks",
                 new AdvancementDisplay(
-                        CustomStack.getInstance("aywen:dream_planks").getItemStack(),
+                        ItemsAdderUtils.getNonNullCustomStack("aywen:dream_planks"),
                         "Bu",
                         AdvancementFrameType.TASK,
                         true,

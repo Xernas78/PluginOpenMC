@@ -8,6 +8,7 @@ import com.fren_gor.ultimateAdvancementAPI.visibilities.ParentGrantedVisibility;
 import dev.lone.itemsadder.api.CustomStack;
 import dev.lone.itemsadder.api.FontImages.FontImageWrapper;
 import fr.communaywen.core.economy.EconomyManager;
+import fr.communaywen.core.utils.ItemsAdderUtils;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,7 +17,7 @@ public class CookedOnionAdvDream extends BaseAdvancement implements ParentGrante
         super(
                 "cooked_poissonion",
                 new AdvancementDisplay(
-                        CustomStack.getInstance("aywen:cooked_poissonion").getItemStack(),
+                        ItemsAdderUtils.getNonNullCustomStack("aywen:cooked_poissonion"),
                         "Poissonion cuit",
                         AdvancementFrameType.GOAL,
                         true,
@@ -30,6 +31,6 @@ public class CookedOnionAdvDream extends BaseAdvancement implements ParentGrante
 
     @Override
     public void giveReward(@NotNull Player player) {
-        EconomyManager.getInstance().addBalance(player, 500, "Advancement "+this.display.getTitle());
+        EconomyManager.getInstance().addBalance(player.getUniqueId(), 500, "Advancement "+this.display.getTitle());
     }
 }

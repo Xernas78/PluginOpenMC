@@ -67,13 +67,8 @@ public class AdminShopSellConfirm extends Menu {
             if(items.getType() == ShopType.SELL_BUY) totalAmount = (items.getPrize() / 2) * quantity;
             else totalAmount = items.getPrize() * quantity;
 
-<<<<<<< HEAD
-            removeItemsFromInventory(getOwner(), Material.getMaterial(items.named()), quantity);
-            economy.addBalance(getOwner().getUniqueId(), totalAmount);
-=======
             ItemUtils.removeItemsFromInventory(getOwner(), Material.getMaterial(items.named()), quantity);
-            economy.addBalance(getOwner(), totalAmount);
->>>>>>> upstream/main
+            economy.addBalance(getOwner().getUniqueId(), totalAmount);
             getOwner().sendMessage("§aVente confirmée !");
             getOwner().sendMessage("  §4- §c" + quantity + " " + items.getName() + " §7pour §a" + String.format("%.2f", totalAmount) + "$");
 

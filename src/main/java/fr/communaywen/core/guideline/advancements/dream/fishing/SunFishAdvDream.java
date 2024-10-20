@@ -7,6 +7,7 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameT
 import com.fren_gor.ultimateAdvancementAPI.visibilities.ParentGrantedVisibility;
 import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.economy.EconomyManager;
+import fr.communaywen.core.utils.ItemsAdderUtils;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,7 +16,7 @@ public class SunFishAdvDream extends BaseAdvancement implements ParentGrantedVis
         super(
                 "sunfish",
                 new AdvancementDisplay(
-                        CustomStack.getInstance("aywen:sun_fish").getItemStack(),
+                        ItemsAdderUtils.getNonNullCustomStack("aywen:sun_fish"),
                         "Poisson-soleil",
                         AdvancementFrameType.GOAL,
                         true,
@@ -29,6 +30,6 @@ public class SunFishAdvDream extends BaseAdvancement implements ParentGrantedVis
 
     @Override
     public void giveReward(@NotNull Player player) {
-        EconomyManager.getInstance().addBalance(player, 500, "Advancement "+this.display.getTitle());
+        EconomyManager.getInstance().addBalance(player.getUniqueId(), 500, "Advancement "+this.display.getTitle());
     }
 }

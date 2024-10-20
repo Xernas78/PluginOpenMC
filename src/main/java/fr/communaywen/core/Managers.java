@@ -2,22 +2,14 @@ package fr.communaywen.core;
 
 import fr.communaywen.core.commands.fun.RewardCommand;
 import fr.communaywen.core.commands.randomEvents.RandomEventsData;
-<<<<<<< HEAD
-import fr.communaywen.core.contest.ContestManager;
+import fr.communaywen.core.contest.managers.ContestManager;
 import fr.communaywen.core.corporation.CompanyManager;
 import fr.communaywen.core.corporation.PlayerShopManager;
-=======
 import fr.communaywen.core.contest.cache.ContestCache;
-import fr.communaywen.core.contest.managers.ContestManager;
->>>>>>> upstream/main
 import fr.communaywen.core.corpse.CorpseManager;
 import fr.communaywen.core.credit.FeatureManager;
-<<<<<<< HEAD
 import fr.communaywen.core.credit.annotations.Credit;
 import fr.communaywen.core.credit.annotations.Feature;
-import fr.communaywen.core.dreamdim.AdvancementRegister;
-=======
->>>>>>> upstream/main
 import fr.communaywen.core.dreamdim.DimensionManager;
 import fr.communaywen.core.customitems.managers.CustomItemsManager;
 import fr.communaywen.core.economy.EconomyManager;
@@ -149,13 +141,10 @@ public class Managers {
         moonDimManager = new MoonDimensionManager(plugin);
         guidelineManager = new GuidelineManager(plugin);
         contestManager = new ContestManager(plugin);
-<<<<<<< HEAD
-        scoreboardManager = new ScoreboardManager(plugin);
-=======
+        scoreboardManager = new ScoreboardManager(plugin, contestManager);
         contestCache = new ContestCache(plugin, contestManager);
         this.teamManager = new TeamManager(plugin);
         scoreboardManager = new ScoreboardManager(plugin, contestManager);
->>>>>>> upstream/main
         dreamdimManager = new DimensionManager(plugin);
         homeManager = new HomeManager(plugin);
         quizManager = new QuizManager(plugin, quizzesConfig, contestManager);

@@ -1,18 +1,9 @@
 package fr.communaywen.core.utils;
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> upstream/main
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.kyori.adventure.translation.GlobalTranslator;
-<<<<<<< HEAD
-=======
-
->>>>>>> upstream/main
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -70,9 +61,6 @@ public class ItemUtils {
         return slot;
     }
 
-<<<<<<< HEAD
-=======
-
     // IMPORT FROM AXENO
     public static boolean hasEnoughItems(Player player, Material item, int amount) {
         int totalItems = 0;
@@ -106,19 +94,14 @@ public class ItemUtils {
             }
         }
     }
->>>>>>> upstream/main
     public static String getDefaultItemName(Player localPlayer, ItemStack itemStack) {
         Material material = itemStack.getType();
         String translationKey = material.getTranslationKey();
 
         TranslatableComponent translatable = Component.translatable(translationKey);
 
-        Component translated = GlobalTranslator.render(translatable, Locale.of(localPlayer.getLocale()));
+        Component translated = GlobalTranslator.render(translatable.asComponent(), Locale.of(localPlayer.getLocale()));
 
         return PlainTextComponentSerializer.plainText().serialize(translated);
-<<<<<<< HEAD
-=======
-
->>>>>>> upstream/main
     }
 }

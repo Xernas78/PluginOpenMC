@@ -6,6 +6,7 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDispla
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
 import com.fren_gor.ultimateAdvancementAPI.visibilities.VanillaVisibility;
 import dev.lone.itemsadder.api.CustomStack;
+import fr.communaywen.core.utils.ItemsAdderUtils;
 import org.jetbrains.annotations.NotNull;
 
 public class TotemAdvDream extends BaseAdvancement implements VanillaVisibility {
@@ -13,7 +14,7 @@ public class TotemAdvDream extends BaseAdvancement implements VanillaVisibility 
         super(
                 "totem",
                 new AdvancementDisplay(
-                        CustomStack.getInstance("aywen:totem_of_undreaming").getItemStack(),
+                        ItemsAdderUtils.getNonNullCustomStack("aywen:totem_of_undreaming"),
                         "Tromper le cauchemar",
                         AdvancementFrameType.TASK,
                         true,

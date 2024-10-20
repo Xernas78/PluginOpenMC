@@ -3,11 +3,7 @@ package fr.communaywen.core.commands.corpse;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.corpse.CorpseBlock;
 import fr.communaywen.core.corpse.CorpseManager;
-<<<<<<< HEAD
 import fr.communaywen.core.credit.annotations.Credit;
-=======
-import fr.communaywen.core.credit.Credit;
->>>>>>> upstream/main
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.*;
 import revxrsal.commands.bukkit.annotation.CommandPermission;

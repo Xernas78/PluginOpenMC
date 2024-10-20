@@ -61,17 +61,6 @@ public class AdvancementRegister extends DatabaseConnector implements Listener {
         return player.getAdvancementProgress(advancement).awardCriteria("requirement");
     }
 
-    public AdvancementRegister(AywenCraftPlugin plugin) {
-        this.plugin = plugin;
-        plugin.registerEvents(
-                this,
-                new CloudBed(this),
-                new SweetChild(this),
-                new Helldivers(this),
-                new OnCookFish()
-        );
-    }
-
     /* REWARDS */
     @EventHandler
     public void onPlayerAchieve(PlayerAdvancementDoneEvent event) {

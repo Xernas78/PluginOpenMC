@@ -6,6 +6,7 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDispla
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
 import com.fren_gor.ultimateAdvancementAPI.visibilities.VanillaVisibility;
 import dev.lone.itemsadder.api.CustomStack;
+import fr.communaywen.core.utils.ItemsAdderUtils;
 import org.jetbrains.annotations.NotNull;
 
 public class CloudAdvDream extends BaseAdvancement implements VanillaVisibility {
@@ -13,7 +14,7 @@ public class CloudAdvDream extends BaseAdvancement implements VanillaVisibility 
         super(
                 "cloud",
                 new AdvancementDisplay(
-                        CustomStack.getInstance("aywen:cloud").getItemStack(),
+                        ItemsAdderUtils.getNonNullCustomStack("aywen:cloud"),
                         "Gash-pilleur",
                         AdvancementFrameType.TASK,
                         true,

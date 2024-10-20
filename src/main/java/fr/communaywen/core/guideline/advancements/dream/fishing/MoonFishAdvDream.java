@@ -7,6 +7,7 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameT
 import com.fren_gor.ultimateAdvancementAPI.visibilities.VanillaVisibility;
 import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.economy.EconomyManager;
+import fr.communaywen.core.utils.ItemsAdderUtils;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,7 +16,7 @@ public class MoonFishAdvDream extends BaseAdvancement implements VanillaVisibili
         super(
                 "moonfish",
                 new AdvancementDisplay(
-                        CustomStack.getInstance("aywen:moon_fish").getItemStack(),
+                        ItemsAdderUtils.getNonNullCustomStack("aywen:moon_fish"),
                         "Poisson-lune",
                         AdvancementFrameType.TASK,
                         true,
@@ -29,6 +30,6 @@ public class MoonFishAdvDream extends BaseAdvancement implements VanillaVisibili
 
     @Override
     public void giveReward(@NotNull Player player) {
-        EconomyManager.getInstance().addBalance(player, 500, "Advancement "+this.display.getTitle());
+        EconomyManager.getInstance().addBalance(player.getUniqueId(), 500, "Advancement "+this.display.getTitle());
     }
 }

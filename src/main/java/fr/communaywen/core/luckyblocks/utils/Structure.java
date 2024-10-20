@@ -4,11 +4,6 @@ import com.flowpowered.nbt.*;
 import com.flowpowered.nbt.stream.NBTInputStream;
 import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.claim.RegionManager;
-<<<<<<< HEAD
-import fr.communaywen.core.credit.annotations.Credit;
-import fr.communaywen.core.credit.annotations.Feature;
-=======
->>>>>>> upstream/main
 import fr.communaywen.core.luckyblocks.tasks.DelayStructureTask;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

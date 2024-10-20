@@ -1,12 +1,5 @@
 package fr.communaywen.core.luckyblocks.managers;
 
-<<<<<<< HEAD
-
-import fr.communaywen.core.credit.annotations.Credit;
-import fr.communaywen.core.credit.annotations.Feature;
-
-=======
->>>>>>> upstream/main
 import java.util.HashMap;
 import java.util.UUID;
 

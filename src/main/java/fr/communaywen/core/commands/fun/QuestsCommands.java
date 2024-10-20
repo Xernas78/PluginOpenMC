@@ -1,19 +1,14 @@
 package fr.communaywen.core.commands.fun;
 
-<<<<<<< HEAD
+
 import fr.communaywen.core.credit.annotations.Credit;
 import fr.communaywen.core.credit.annotations.Feature;
-import fr.communaywen.core.quests.QuestsMenu;
-=======
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
 import fr.communaywen.core.quests.PlayerQuests;
 import fr.communaywen.core.quests.QuestsManager;
 import fr.communaywen.core.quests.menu.QuestsMenu;
 import fr.communaywen.core.quests.menu.QuestsMenuTarget;
 import fr.communaywen.core.quests.qenum.QUESTS;
 import org.bukkit.OfflinePlayer;
->>>>>>> upstream/main
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.*;
 import revxrsal.commands.bukkit.annotation.CommandPermission;

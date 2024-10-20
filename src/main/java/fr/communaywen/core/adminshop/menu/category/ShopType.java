@@ -1,14 +1,10 @@
 package fr.communaywen.core.adminshop.menu.category;
 
-<<<<<<< HEAD
-
 import fr.communaywen.core.credit.annotations.Credit;
 import fr.communaywen.core.credit.annotations.Feature;
 
 @Credit("Axeno")
 @Feature("AdminShop")
-=======
->>>>>>> upstream/main
 public enum ShopType {
     SELL,
     BUY,

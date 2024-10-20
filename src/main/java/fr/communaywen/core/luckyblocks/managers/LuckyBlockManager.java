@@ -1,11 +1,6 @@
 package fr.communaywen.core.luckyblocks.managers;
 
-<<<<<<< HEAD
-import fr.communaywen.core.credit.annotations.Credit;
-import fr.communaywen.core.credit.annotations.Feature;
-=======
 import fr.communaywen.core.contest.managers.ContestManager;
->>>>>>> upstream/main
 import fr.communaywen.core.luckyblocks.events.bonus.*;
 import fr.communaywen.core.luckyblocks.events.malus.*;
 import fr.communaywen.core.luckyblocks.events.neutrals.LBBatman;

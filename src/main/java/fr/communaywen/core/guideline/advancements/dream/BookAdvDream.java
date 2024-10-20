@@ -9,6 +9,7 @@ import com.fren_gor.ultimateAdvancementAPI.visibilities.ParentGrantedVisibility;
 import com.fren_gor.ultimateAdvancementAPI.visibilities.VanillaVisibility;
 import dev.lone.itemsadder.api.CustomStack;
 import fr.communaywen.core.economy.EconomyManager;
+import fr.communaywen.core.utils.ItemsAdderUtils;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,7 +18,7 @@ public class BookAdvDream extends BaseAdvancement implements VanillaVisibility {
         super(
                 "codex",
                 new AdvancementDisplay(
-                        CustomStack.getInstance("aywen:codex_somnii").getItemStack(),
+                        ItemsAdderUtils.getNonNullCustomStack("aywen:codex_somnii"),
                         "Puit de Connaissance",
                         AdvancementFrameType.TASK,
                         true,
@@ -31,7 +32,7 @@ public class BookAdvDream extends BaseAdvancement implements VanillaVisibility {
 
     @Override
     public void giveReward(@NotNull Player player) {
-        EconomyManager.getInstance().addBalance(player, 500, "Advancement "+this.display.getTitle());
+        EconomyManager.getInstance().addBalance(player.getUniqueId(), 500, "Advancement "+this.display.getTitle());
     }
 
     @Override

@@ -1,11 +1,7 @@
 package fr.communaywen.core.mailboxes;
 
-<<<<<<< HEAD
-import fr.communaywen.core.credit.annotations.Credit;
-=======
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.credit.Credit;
->>>>>>> upstream/main
+import fr.communaywen.core.credit.annotations.Credit;
 import fr.communaywen.core.mailboxes.letter.LetterHead;
 import fr.communaywen.core.mailboxes.menu.HomeMailbox;
 import fr.communaywen.core.mailboxes.menu.PendingMailbox;

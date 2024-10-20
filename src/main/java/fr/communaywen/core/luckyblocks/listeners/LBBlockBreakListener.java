@@ -1,11 +1,6 @@
 package fr.communaywen.core.luckyblocks.listeners;
 
 import dev.lone.itemsadder.api.CustomBlock;
-<<<<<<< HEAD
-import fr.communaywen.core.credit.annotations.Credit;
-import fr.communaywen.core.credit.annotations.Feature;
-=======
->>>>>>> upstream/main
 import fr.communaywen.core.luckyblocks.managers.LuckyBlockManager;
 import fr.communaywen.core.luckyblocks.utils.LBUtils;
 import org.bukkit.GameMode;

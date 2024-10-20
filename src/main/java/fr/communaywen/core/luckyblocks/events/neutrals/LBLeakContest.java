@@ -1,13 +1,7 @@
 package fr.communaywen.core.luckyblocks.events.neutrals;
 
-<<<<<<< HEAD
-import fr.communaywen.core.contest.ContestManager;
-import fr.communaywen.core.credit.annotations.Credit;
-import fr.communaywen.core.credit.annotations.Feature;
-=======
 import fr.communaywen.core.contest.cache.ContestCache;
 import fr.communaywen.core.contest.managers.ContestManager;
->>>>>>> upstream/main
 import fr.communaywen.core.luckyblocks.enums.EventType;
 import fr.communaywen.core.luckyblocks.objects.LuckyBlockEvent;
 import fr.communaywen.core.utils.constant.MessageManager;

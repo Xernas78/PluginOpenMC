@@ -1,10 +1,5 @@
 package fr.communaywen.core.utils.constant;
 
-<<<<<<< HEAD
-import fr.communaywen.core.credit.annotations.Credit;
-import fr.communaywen.core.credit.annotations.Feature;
-=======
->>>>>>> upstream/main
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 

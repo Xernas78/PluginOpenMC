@@ -53,11 +53,6 @@ public class QuestsListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) throws SQLException {
-<<<<<<< HEAD
-        PlayerQuests pq = QuestsManager.getPlayerQuests(event.getPlayer().getUniqueId());
-        for(QUESTS quests : QUESTS.values())
-            QuestsManager.savePlayerQuestProgress(event.getPlayer(), quests, pq.getProgress(quests));
-=======
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             PlayerQuests pq = QuestsManager.getPlayerQuests(event.getPlayer().getUniqueId());
             try {
@@ -66,7 +61,6 @@ public class QuestsListener implements Listener {
                 throw new RuntimeException(e);
             }
         });
->>>>>>> upstream/main
     }
 
     @EventHandler
@@ -102,15 +96,9 @@ public class QuestsListener implements Listener {
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
-<<<<<<< HEAD
-        Player killer = event.getEntity().getKiller();
-        if(killer == null) return;
-        QuestsManager.manageQuestsPlayer(killer.getUniqueId(), QUESTS.KILL_PLAYERS, 1, "joueur(s) tué(s)");
-=======
         if(event.getEntity().getKiller() instanceof Player killer) {
-            QuestsManager.manageQuestsPlayer(killer, QUESTS.KILL_PLAYERS, 1, "joueur(s) tué(s)");
+            QuestsManager.manageQuestsPlayer(killer.getUniqueId(), QUESTS.KILL_PLAYERS, 1, "joueur(s) tué(s)");
         }
->>>>>>> upstream/main
     }
 
     @EventHandler
@@ -140,22 +128,11 @@ public class QuestsListener implements Listener {
         int blockY = to.getBlockY();
         int blockZ = to.getBlockZ();
 
-<<<<<<< HEAD
-        if (blockX != from.getBlockX() || blockZ != from.getBlockZ()) {
-            QuestsManager.manageQuestsPlayer(player.getUniqueId(), QUESTS.WALK_BLOCKS, 1, "Block(s) marché(s)");
-        }
-
-        if (blockX == NINJA_JUMP_END.getBlockX() && blockY == NINJA_JUMP_END.getBlockY() && blockZ == NINJA_JUMP_END.getBlockZ()) {
-            QuestsManager.manageQuestsPlayer(player.getUniqueId(), QUESTS.NINJA, 1, "jump complété");
-        }
-=======
-
         if (blockX != from.getBlockX() || blockZ != from.getBlockZ())
-            QuestsManager.manageQuestsPlayer(player, QUESTS.WALK_BLOCKS, 1, "Block(s) marché(s)");
+            QuestsManager.manageQuestsPlayer(player.getUniqueId(), QUESTS.WALK_BLOCKS, 1, "Block(s) marché(s)");
 
 //        if (blockX == NINJA_JUMP_END.getBlockX() && blockY == NINJA_JUMP_END.getBlockY() && blockZ == NINJA_JUMP_END.getBlockZ())
 //            QuestsManager.manageQuestsPlayer(player, QUESTS.NINJA, 1, "jump complété");
->>>>>>> upstream/main
     }
 
     @EventHandler

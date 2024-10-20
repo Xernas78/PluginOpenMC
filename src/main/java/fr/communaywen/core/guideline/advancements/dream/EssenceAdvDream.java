@@ -5,13 +5,14 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDispla
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
 import com.fren_gor.ultimateAdvancementAPI.visibilities.VanillaVisibility;
 import dev.lone.itemsadder.api.CustomStack;
+import fr.communaywen.core.utils.ItemsAdderUtils;
 
 public class EssenceAdvDream extends BaseAdvancement implements VanillaVisibility {
     public EssenceAdvDream() {
         super(
                 "essence",
                 new AdvancementDisplay(
-                        CustomStack.getInstance("aywen:dream_essence").getItemStack(),
+                        ItemsAdderUtils.getNonNullCustomStack("aywen:dream_essence"),
                         "Première essence",
                         AdvancementFrameType.TASK,
                         true,

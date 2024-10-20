@@ -40,24 +40,14 @@ import fr.communaywen.core.commands.teams.TeamCommand;
 import fr.communaywen.core.commands.teleport.RTPCommand;
 import fr.communaywen.core.commands.teleport.SpawnCommand;
 import fr.communaywen.core.commands.utils.*;
-<<<<<<< HEAD
-import fr.communaywen.core.contest.ContestIntractEvents;
-import fr.communaywen.core.contest.ContestListener;
-import fr.communaywen.core.contest.ContestManager;
-import fr.communaywen.core.contest.FirerocketSpawnListener;
 import fr.communaywen.core.corporation.Shop;
 import fr.communaywen.core.corporation.commands.CompanyCommand;
 import fr.communaywen.core.corporation.commands.ShopCommand;
 import fr.communaywen.core.corporation.listener.ShopListener;
-=======
-import fr.communaywen.core.contest.cache.ContestCache;
-import fr.communaywen.core.contest.cache.ContestDataCache;
 import fr.communaywen.core.contest.listeners.ContestIntractEvents;
 import fr.communaywen.core.contest.listeners.ContestListener;
 import fr.communaywen.core.contest.listeners.FirerocketSpawnListener;
-import fr.communaywen.core.contest.managers.ColorConvertor;
 import fr.communaywen.core.contest.managers.ContestManager;
->>>>>>> upstream/main
 import fr.communaywen.core.customitems.commands.ShowCraftCommand;
 import fr.communaywen.core.customitems.listeners.CIBreakBlockListener;
 import fr.communaywen.core.customitems.listeners.CIEnchantListener;
@@ -130,6 +120,7 @@ import java.util.List;
 import java.util.*;
 
 public final class AywenCraftPlugin extends JavaPlugin {
+
     public static ArrayList<Player> frozenPlayers = new ArrayList<>();
     public static ArrayList<Player> playerClaimsByPass = new ArrayList<>();
 
@@ -542,21 +533,14 @@ public final class AywenCraftPlugin extends JavaPlugin {
         jumpManager.removeDisplayJumpEnd();
 
         for (Player player : Bukkit.getOnlinePlayers()) {
-<<<<<<< HEAD
-            for (QUESTS quests : QUESTS.values()) {
-                PlayerQuests pq = QuestsManager.getPlayerQuests(player.getUniqueId()); // Load quest progress
-                QuestsManager.savePlayerQuestProgress(player, quests, pq.getProgress(quests)); // Save quest progress
-                player.closeInventory(); // Close inventory
-            }
-=======
             PlayerQuests pq = QuestsManager.getPlayerQuests(player.getUniqueId()); // Load quest progress
             QuestsManager.savePlayerQuestProgress(player, pq); // Save quest progress
             player.closeInventory(); // Close inventory
->>>>>>> upstream/main
         }
+
         try {
-            this.getConfig().save(new File(this.getDataFolder(), "config.yml"));
-            loadEventsManager().save(new File(this.getDataFolder(), "events.yml"));
+            this.getConfig().save(new File(getDataFolder(), "config.yml"));
+            loadEventsManager().save(new File(getDataFolder(), "events.yml"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

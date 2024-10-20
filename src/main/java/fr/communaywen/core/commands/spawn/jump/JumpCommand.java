@@ -1,9 +1,8 @@
 package fr.communaywen.core.commands.spawn.jump;
 
 import fr.communaywen.core.AywenCraftPlugin;
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
-import fr.communaywen.core.spawn.head.HeadManager;
+import fr.communaywen.core.credit.annotations.Credit;
+import fr.communaywen.core.credit.annotations.Feature;
 import fr.communaywen.core.spawn.jump.JumpManager;
 import fr.communaywen.core.utils.constant.MessageManager;
 import fr.communaywen.core.utils.constant.MessageType;
@@ -13,10 +12,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.*;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 
 @Feature("Jump")

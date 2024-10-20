@@ -70,12 +70,8 @@ public class QuestsManager extends DatabaseConnector {
         return playerQuests.get(player);
     }
 
-<<<<<<< HEAD
     public static void manageQuestsPlayer(UUID player, QUESTS quest, int amount, String actionBar) {
         PlayerQuests pq = getPlayerQuests(player);
-=======
-    public static void manageQuestsPlayer(Player player, QUESTS quest, int amount, String actionBar) {
-        PlayerQuests pq = getPlayerQuests(player.getUniqueId());
         int currentTier = pq.getCurrentTier(quest);
 
         if (pq.isQuestCompleted(quest)) { return; }
@@ -83,18 +79,22 @@ public class QuestsManager extends DatabaseConnector {
         if (currentTier < 0 || currentTier >= quest.getQtTiers().length) {
             return;
         }
->>>>>>> upstream/main
+
+        Player bukkitPlayer = Bukkit.getPlayer(player);
+        if (bukkitPlayer == null) {
+            return;
+        }
 
         pq.addProgress(quest, amount);
-        sendActionBar(player, quest, pq.getProgress(quest), currentTier, actionBar);
+        sendActionBar(bukkitPlayer, quest, pq.getProgress(quest), currentTier, actionBar);
 
         if (pq.getProgress(quest) >= quest.getQt(currentTier)) {
             if (currentTier + 1 < quest.getQtTiers().length) {
                 pq.setCurrentTier(quest, currentTier + 1);
-                MessageManager.sendMessageType(player, MessageManager.textToSmall("§6Quête tier §e" + (currentTier + 1) + " §6complétée: §e" + quest.getName()), Prefix.QUESTS, MessageType.SUCCESS, true);
-                grantReward(player, quest, currentTier);
+                MessageManager.sendMessageType(bukkitPlayer, MessageManager.textToSmall("§6Quête tier §e" + (currentTier + 1) + " §6complétée: §e" + quest.getName()), Prefix.QUESTS, MessageType.SUCCESS, true);
+                grantReward(bukkitPlayer, quest, currentTier);
             } else {
-                completeQuestTier(player, quest, currentTier);
+                completeQuestTier(bukkitPlayer, quest, currentTier);
             }
         }
     }
@@ -191,18 +191,6 @@ public class QuestsManager extends DatabaseConnector {
         }
     }
 
-<<<<<<< HEAD
-    private static void sendActionBar(UUID uuid, QUESTS quest, int progress, String actionBar) {
-        Player player = Bukkit.getPlayer(uuid);
-        if (player == null) return;
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
-                new TextComponent("» §7[§9§lQuêtes§7] §6" + progress + "§l/§6" + quest.getQt() + " " + actionBar));
-    }
-
-    private static void completeQuest(UUID uuid, QUESTS quest) {
-        Player player = Bukkit.getPlayer(uuid);
-        if (player == null) return;
-=======
     private static void sendActionBar(Player player, QUESTS quest, int progress, int currentTier, String actionBar) {
         if (!JumpManager.isJumping(player)) {
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
@@ -211,7 +199,6 @@ public class QuestsManager extends DatabaseConnector {
     }
 
     private static void completeQuestTier(Player player, QUESTS quest, int completedTier) {
->>>>>>> upstream/main
         player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 10, 10);
         player.sendTitle("§6QUETE ENTIEREMENT COMPLETEE", "§e" + quest.getName());
         player.sendMessage(Prefix.QUESTS.getPrefix() + MessageManager.textToSmall("§7» §6Quête entièrement complétée: §e" + quest.getName()));
@@ -222,12 +209,7 @@ public class QuestsManager extends DatabaseConnector {
                 player.sendMessage(Prefix.QUESTS.getPrefix() + MessageManager.textToSmall(" §7» §6+ " + quest.getRewardsQt(completedTier) + " " + ItemUtils.getDefaultItemName(player, quest.getRewardsMaterial())));
                 break;
             case MONEY:
-<<<<<<< HEAD
-                AywenCraftPlugin.getInstance().getManagers().getEconomyManager().addBalance(uuid, quest.getRewardsQt());
-
-=======
-                AywenCraftPlugin.getInstance().getManagers().getEconomyManager().addBalance(player, quest.getRewardsQt(completedTier));
->>>>>>> upstream/main
+                AywenCraftPlugin.getInstance().getManagers().getEconomyManager().addBalance(player.getUniqueId(), quest.getRewardsQt(completedTier));
 
                 new TransactionsManager().addTransaction(new Transaction(
                         player.getUniqueId().toString(),
@@ -260,7 +242,7 @@ public class QuestsManager extends DatabaseConnector {
                 player.sendMessage(Prefix.QUESTS.getPrefix() + MessageManager.textToSmall(" §7» §6+ " + quest.getRewardsQt(tier) + " " + quest.getRewardsMaterial().getType().name()));
                 break;
             case MONEY:
-                AywenCraftPlugin.getInstance().getManagers().getEconomyManager().addBalance(player, quest.getRewardsQt(tier));
+                AywenCraftPlugin.getInstance().getManagers().getEconomyManager().addBalance(player.getUniqueId(), quest.getRewardsQt(tier));
                 new TransactionsManager().addTransaction(new Transaction(
                         player.getUniqueId().toString(),
                         "CONSOLE",

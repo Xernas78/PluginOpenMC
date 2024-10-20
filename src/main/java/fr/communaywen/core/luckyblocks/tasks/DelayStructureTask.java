@@ -1,10 +1,5 @@
 package fr.communaywen.core.luckyblocks.tasks;
 
-<<<<<<< HEAD
-import fr.communaywen.core.credit.annotations.Credit;
-import fr.communaywen.core.credit.annotations.Feature;
-=======
->>>>>>> upstream/main
 import fr.communaywen.core.luckyblocks.utils.Structure;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

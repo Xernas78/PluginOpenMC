@@ -1,15 +1,9 @@
 package fr.communaywen.core;
 
-<<<<<<< HEAD
-import fr.communaywen.core.contest.ContestManager;
+import fr.communaywen.core.contest.managers.ContestManager;
 import fr.communaywen.core.credit.annotations.Credit;
 import fr.communaywen.core.credit.annotations.Feature;
-=======
 import fr.communaywen.core.contest.cache.ContestCache;
-import fr.communaywen.core.contest.managers.ContestManager;
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
->>>>>>> upstream/main
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.player.AsyncPlayerChatEvent;

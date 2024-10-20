@@ -1,13 +1,7 @@
 package fr.communaywen.core.economy;
 
-<<<<<<< HEAD
-import fr.communaywen.core.AywenCraftPlugin;
 import fr.communaywen.core.credit.annotations.Credit;
 import fr.communaywen.core.credit.annotations.Feature;
-=======
-import fr.communaywen.core.credit.Credit;
-import fr.communaywen.core.credit.Feature;
->>>>>>> upstream/main
 import fr.communaywen.core.quests.PlayerQuests;
 import fr.communaywen.core.quests.QuestsManager;
 import fr.communaywen.core.quests.qenum.QUESTS;
@@ -50,24 +44,20 @@ public class EconomyManager {
 
         saveBalances(uuid);
         for(QUESTS quests : QUESTS.values()) {
-<<<<<<< HEAD
             PlayerQuests pq = QuestsManager.getPlayerQuests(uuid);
-=======
-            PlayerQuests pq = QuestsManager.getPlayerQuests(player.getUniqueId());
             if(quests.getType() == TYPE.MONEY) {
                 if(!pq.isQuestCompleted(quests)) {
-                    QuestsManager.manageQuestsPlayer(player, quests, (int) amount, " argents récoltés");
+                    QuestsManager.manageQuestsPlayer(uuid, quests, (int) amount, " argents récoltés");
                 }
             }
         }
     }
 
-    public void addBalance(Player player, double amount, String reason) {
-        UUID uuid = player.getUniqueId();
-        balances.put(uuid, getBalance(player) + amount);
+    public void addBalance(UUID player, double amount, String reason) {
+        balances.put(player, getBalance(player) + amount);
 
         new TransactionsManager().addTransaction(new Transaction(
-                player.getUniqueId().toString(),
+                player.toString(),
                 "CONSOLE",
                 amount,
                 reason
@@ -75,11 +65,10 @@ public class EconomyManager {
 
         saveBalances(player);
         for(QUESTS quests : QUESTS.values()) {
-            PlayerQuests pq = QuestsManager.getPlayerQuests(player.getUniqueId());
->>>>>>> upstream/main
+            PlayerQuests pq = QuestsManager.getPlayerQuests(player);
             if(quests.getType() == TYPE.MONEY) {
                 if(!pq.isQuestCompleted(quests)) {
-                    QuestsManager.manageQuestsPlayer(uuid, quests, (int) amount, " argents récoltés");
+                    QuestsManager.manageQuestsPlayer(player, quests, (int) amount, " argents récoltés");
                 }
             }
         }
@@ -98,7 +87,7 @@ public class EconomyManager {
             balances.put(player, balance - amount);
             saveBalances(player);
             for(QUESTS quests : QUESTS.values()) {
-                PlayerQuests pq = QuestsManager.getPlayerQuests(player.getUniqueId());
+                PlayerQuests pq = QuestsManager.getPlayerQuests(player);
                 if(quests.getType() == TYPE.MONEY) {
                     if(!pq.isQuestCompleted(quests)) {
                         pq.removeProgress(quests, (int) amount);

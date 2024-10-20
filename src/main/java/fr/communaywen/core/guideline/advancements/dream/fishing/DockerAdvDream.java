@@ -8,7 +8,10 @@ import com.fren_gor.ultimateAdvancementAPI.visibilities.VanillaVisibility;
 import dev.lone.itemsadder.api.CustomStack;
 import dev.lone.itemsadder.api.FontImages.FontImageWrapper;
 import fr.communaywen.core.economy.EconomyManager;
+import fr.communaywen.core.utils.ItemsAdderUtils;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class DockerAdvDream extends BaseAdvancement implements VanillaVisibility {
@@ -16,7 +19,7 @@ public class DockerAdvDream extends BaseAdvancement implements VanillaVisibility
         super(
                 "dockerfish",
                 new AdvancementDisplay(
-                        CustomStack.getInstance("aywen:dockerfish").getItemStack(),
+                        ItemsAdderUtils.getNonNullCustomStack("aywen:dockerfish"),
                         "Poisson Docker",
                         AdvancementFrameType.TASK,
                         true,
@@ -30,6 +33,6 @@ public class DockerAdvDream extends BaseAdvancement implements VanillaVisibility
 
     @Override
     public void giveReward(@NotNull Player player) {
-        EconomyManager.getInstance().addBalance(player, 500, "Advancement "+this.display.getTitle());
+        EconomyManager.getInstance().addBalance(player.getUniqueId(), 500, "Advancement "+this.display.getTitle());
     }
 }

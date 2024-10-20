@@ -211,7 +211,7 @@ public class CompanyCommand {
             return;
         }
         if (!manager.getCompany(player.getUniqueId()).isUniqueOwner(player.getUniqueId())) {
-            player.sendMessage(ChatColor.RED + "Vous n'êtes pas le propriétaire principal de l'entreprise !");
+            player.sendMessage(ChatColor.RED + "Vous n'êtes pas le propriétaire haut-gradé de l'entreprise !");
             return;
         }
         if (cut < 0 || cut > 100) {
@@ -297,7 +297,7 @@ public class CompanyCommand {
             return;
         }
         if (!manager.getCompany(player.getUniqueId()).isUniqueOwner(player.getUniqueId())) {
-            player.sendMessage(ChatColor.RED + "Vous ne faites pas partie des propriétaires haut gradés de l'entreprise !");
+            player.sendMessage(ChatColor.RED + "Vous n'etes pas le propriétaire haut gradé de l'entreprise !");
             return;
         }
         if (!manager.isMerchantOfCompany(target.getUniqueId(), manager.getCompany(player.getUniqueId()))) {
