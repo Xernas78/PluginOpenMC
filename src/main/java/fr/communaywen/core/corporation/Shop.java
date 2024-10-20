@@ -7,6 +7,7 @@ import fr.communaywen.core.credit.annotations.Credit;
 import fr.communaywen.core.credit.annotations.Feature;
 import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.teams.utils.MethodState;
+import fr.communaywen.core.utils.InverseStack;
 import fr.communaywen.core.utils.ItemUtils;
 import fr.communaywen.core.utils.world.WorldUtils;
 import fr.communaywen.core.utils.world.Yaw;
@@ -37,7 +38,7 @@ public class Shop {
     private final EconomyManager economyManager;
     private final List<ShopItem> items = new ArrayList<>();
     private final List<ShopItem> sales = new ArrayList<>();
-    private final Map<UUID, UUID> suppliers = new HashMap<>();
+    private final Map<Long, Supply> suppliers = new HashMap<>();
     private final int index;
     private final UUID uuid = UUID.randomUUID();
     private final Block cashBlock;
@@ -123,7 +124,7 @@ public class Shop {
         for (ShopItem shopItem : items) {
             if (shopItem.getItem().isSimilar(item)) {
                 shopItem.setAmount(shopItem.getAmount() + item.getAmount());
-                suppliers.put(shopItem.getItemID(), supplier);
+                suppliers.put(System.currentTimeMillis(), new Supply(supplier, shopItem.getItemID(), item.getAmount()));
                 return true;
             }
         }
@@ -144,15 +145,43 @@ public class Shop {
         item.setAmount(item.getAmount() - amount);
         turnover += item.getPrice(amount);
         if (owner.isCompany()) {
+            int amountToBuy = amount;
             double price = item.getPrice(amount);
-            double companyCut = price * 0.40;
-            double supplierCut = price - companyCut;
-            UUID supplier = suppliers.get(item.getItemID());
-            if (supplier == null) {
+            double companyCut = price * owner.getCompany().getCut();
+            double suppliersCut = price - companyCut;
+            boolean supplied = false;
+            List<Supply> supplies = new ArrayList<>();
+            for (Map.Entry<Long, Supply> entry : suppliers.entrySet()) {
+                if (entry.getValue().getItemId().equals(item.getItemID())) {
+                    long latest = 0;
+                    if (entry.getKey() > latest) {
+                        latest = entry.getKey();
+                        supplies.add(entry.getValue());
+                    }
+                }
+            }
+            if (!supplies.isEmpty()) {
+                supplied = true;
+                for (Supply supply : supplies) {
+                    if (amountToBuy == 0) break;
+                    if (amountToBuy >= supply.getAmount()) {
+                        amountToBuy -= supply.getAmount();
+                        removeLatestSupply();
+                        double supplierCut = suppliersCut * ((double) supply.getAmount() / amount);
+                        economyManager.addBalance(supply.getSupplier(), supplierCut);
+                    }
+                    else {
+                        supply.setAmount(supply.getAmount() - amountToBuy);
+                        double supplierCut = suppliersCut * ((double) amountToBuy / amount);
+                        economyManager.addBalance(supply.getSupplier(), supplierCut);
+                        break;
+                    }
+                }
+            }
+            if (!supplied) {
                 return MethodState.ESCAPE;
             }
-            owner.getCompany().deposit(companyCut, buyer, "Purchase", getName(), economyManager);
-            economyManager.addBalance(supplier, supplierCut);
+            owner.getCompany().deposit(companyCut, buyer, "Vente", getName(), economyManager);
         }
         else {
             if (!economyManager.withdrawBalance(buyer.getUniqueId(), item.getPrice(amount))) return MethodState.ERROR;
@@ -167,6 +196,21 @@ public class Shop {
         }
         sales.add(item.copy().setAmount(amount));
         return MethodState.SUCCESS;
+    }
+
+    private Supply removeLatestSupply() {
+        long latest = 0;
+        Supply supply = null;
+        for (Map.Entry<Long, Supply> entry : suppliers.entrySet()) {
+            if (entry.getKey() > latest) {
+                latest = entry.getKey();
+                supply = entry.getValue();
+            }
+        }
+        if (supply != null) {
+            suppliers.remove(latest);
+        }
+        return supply;
     }
 
     public ItemBuilder getIcon(Menu menu, boolean fromShopMenu) {

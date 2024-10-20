@@ -22,7 +22,7 @@ import java.util.UUID;
 
 @Credit("Xernas")
 @Feature("Corporations")
-@Command("company")
+@Command({"company", "entreprise", "enterprise"})
 @Description("Gestion des entreprises")
 @CommandPermission("ayw.command.company")
 public class CompanyCommand {
@@ -52,7 +52,7 @@ public class CompanyCommand {
     @Subcommand("usage")
     @Description("Afficher l'utilisation des commandes d'une entreprise")
     public void usage(Player player) {
-        player.sendMessage("Usage : /company <baltop | balance | create | teamCreate | menu | search | apply | deny | accept | withdraw | deposit | leave | fire | owner | liquidate>");
+        player.sendMessage("Usage : /company <baltop | balance | create | teamCreate | menu | search | apply | deny | accept | withdraw | deposit | setcut | leave | fire | owner | liquidate>");
     }
 
     @Subcommand("apply")
@@ -201,6 +201,25 @@ public class CompanyCommand {
             return;
         }
         player.sendMessage(ChatColor.GREEN + "Solde de l'entreprise : " + manager.getCompany(player.getUniqueId()).getBalance() + "€");
+    }
+
+    @Subcommand("setcut")
+    @Description("Définir la part de l'entreprise lors d'une vente")
+    public void setCut(Player player, @Named("cut") double cut) {
+        if (!manager.isInCompany(player.getUniqueId())) {
+            player.sendMessage(ChatColor.RED + "Vous n'êtes pas dans une entreprise !");
+            return;
+        }
+        if (!manager.getCompany(player.getUniqueId()).isUniqueOwner(player.getUniqueId())) {
+            player.sendMessage(ChatColor.RED + "Vous n'êtes pas le propriétaire principal de l'entreprise !");
+            return;
+        }
+        if (cut < 0 || cut > 100) {
+            player.sendMessage(ChatColor.RED + "La part doit être comprise entre 0 et 100 !");
+            return;
+        }
+        manager.getCompany(player.getUniqueId()).setCut(cut / 100);
+        player.sendMessage(ChatColor.GREEN + "Vous avez défini la part de l'entreprise à " + cut + "% !");
     }
 
     @Subcommand("create")

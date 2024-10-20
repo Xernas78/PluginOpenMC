@@ -7,6 +7,7 @@ import fr.communaywen.core.economy.EconomyManager;
 import fr.communaywen.core.teams.utils.MethodState;
 import fr.communaywen.core.utils.Queue;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -26,6 +27,8 @@ public class Company {
     private final double turnover = 0;
     private CompanyOwner owner;
     private double balance = 0;
+    @Setter
+    private double cut = 0.25;
 
     private int shopCounter = 0;
 
