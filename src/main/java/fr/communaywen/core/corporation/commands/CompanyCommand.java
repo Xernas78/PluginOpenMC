@@ -1,9 +1,6 @@
 package fr.communaywen.core.corporation.commands;
 
-import fr.communaywen.core.corporation.Company;
-import fr.communaywen.core.corporation.CompanyManager;
-import fr.communaywen.core.corporation.CompanyOwner;
-import fr.communaywen.core.corporation.PlayerShopManager;
+import fr.communaywen.core.corporation.*;
 import fr.communaywen.core.corporation.menu.company.CompanyBaltopMenu;
 import fr.communaywen.core.corporation.menu.company.CompanyMenu;
 import fr.communaywen.core.corporation.menu.company.CompanySearchMenu;
@@ -30,12 +27,14 @@ public class CompanyCommand {
     private final CompanyManager manager;
     private final TeamManager teamManager;
     private final EconomyManager economyManager;
+    private final ShopBlocksManager shopBlocksManager;
     private final PlayerShopManager playerShopManager;
 
-    public CompanyCommand(CompanyManager manager, TeamManager teamManager, EconomyManager economyManager, PlayerShopManager playerShopManager) {
+    public CompanyCommand(CompanyManager manager, TeamManager teamManager, EconomyManager economyManager, ShopBlocksManager shopBlocksManager, PlayerShopManager playerShopManager) {
         this.manager = manager;
         this.teamManager = teamManager;
         this.economyManager = economyManager;
+        this.shopBlocksManager = shopBlocksManager;
         this.playerShopManager = playerShopManager;
     }
 
@@ -226,7 +225,7 @@ public class CompanyCommand {
     @Description("Créer une entreprise")
     public void createCompany(Player player, @Named("name") String name) {
         if (!check(player, name, false)) return;
-        manager.createCompany(name, new CompanyOwner(player.getUniqueId()), economyManager);
+        manager.createCompany(name, new CompanyOwner(player.getUniqueId()), economyManager, shopBlocksManager);
         player.sendMessage(ChatColor.GREEN + "L'entreprise " + name + " a été créée avec succès !");
     }
 
@@ -242,7 +241,7 @@ public class CompanyCommand {
             player.sendMessage(ChatColor.RED + "Vous ne pouvez pas créer d'entreprise au nom de votre team sans en être l'owner");
             return;
         }
-        manager.createCompany(name, new CompanyOwner(teamManager.getTeamByPlayer(player.getUniqueId())), economyManager);
+        manager.createCompany(name, new CompanyOwner(teamManager.getTeamByPlayer(player.getUniqueId())), economyManager, shopBlocksManager);
         player.sendMessage(ChatColor.GREEN + "L'entreprise " + name + " a été créée avec succès !");
     }
 

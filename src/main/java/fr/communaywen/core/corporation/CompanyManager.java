@@ -21,8 +21,8 @@ public class CompanyManager {
     private final List<Company> companies = new ArrayList<>();
     private final Queue<UUID, Company> pendingApplications = new Queue<>(100);
 
-    public void createCompany(String name, CompanyOwner owner, EconomyManager economyManager) {
-        companies.add(new Company(name, owner, economyManager));
+    public void createCompany(String name, CompanyOwner owner, EconomyManager economyManager, ShopBlocksManager shopBlocksManager) {
+        companies.add(new Company(name, owner, economyManager, shopBlocksManager));
     }
 
     public void applyToCompany(UUID player, Company company) {

@@ -19,18 +19,21 @@ public class PlayerShopManager {
 
     private final Map<UUID, Shop> playerShops = new HashMap<>();
     private final EconomyManager economyManager;
+    private final ShopBlocksManager shopBlocksManager;
 
-    public PlayerShopManager(EconomyManager economyManager) {
+    public PlayerShopManager(EconomyManager economyManager, ShopBlocksManager shopBlocksManager) {
         this.economyManager = economyManager;
+        this.shopBlocksManager = shopBlocksManager;
     }
 
     public boolean createShop(Player player, Block barrel, Block cashRegister) {
         if (!economyManager.withdrawBalance(player.getUniqueId(), 500)) {
             return false;
         }
-        Shop newShop = new Shop(new ShopOwner(player.getUniqueId()), barrel, cashRegister, 0, economyManager);
+        Shop newShop = new Shop(new ShopOwner(player.getUniqueId()), 0, economyManager, shopBlocksManager);
         playerShops.put(player.getUniqueId(), newShop);
-        newShop.placeShop(player, false);
+        shopBlocksManager.registerMultiblock(newShop, new Shop.Multiblock(barrel.getLocation(), cashRegister.getLocation()));
+        shopBlocksManager.placeShop(newShop, player, false);
         return true;
     }
 
@@ -39,7 +42,7 @@ public class PlayerShopManager {
         if (!shop.getItems().isEmpty()) {
             return MethodState.WARNING;
         }
-        if (!shop.removeShop()) {
+        if (!shopBlocksManager.removeShop(shop)) {
             return MethodState.ESCAPE;
         }
         playerShops.remove(player);

@@ -124,8 +124,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
     public static ArrayList<Player> frozenPlayers = new ArrayList<>();
     public static ArrayList<Player> playerClaimsByPass = new ArrayList<>();
 
-    public static NamespacedKey COMPANY_SHOP_KEY;
-    public static NamespacedKey PLAYER_SHOP_KEY;
     public static NamespacedKey SUPPLIER_KEY;
 
     @Getter
@@ -180,8 +178,6 @@ public final class AywenCraftPlugin extends JavaPlugin {
         // Gardez les au début sinon ça pète tout
         instance = this;
 
-        COMPANY_SHOP_KEY = new NamespacedKey(this, "shop_company");
-        PLAYER_SHOP_KEY = new NamespacedKey(this, "shop_player");
         SUPPLIER_KEY = new NamespacedKey(this, "supplier");
 
         RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
@@ -373,8 +369,8 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new QuestsCommands(),
                 new RewardCommand(this),
                 new FeatureCommand(managers.getFeatureManager()),
-                new CompanyCommand(managers.getCompanyManager(), managers.getTeamManager(), managers.getEconomyManager(), managers.getPlayerShopManager()),
-                new ShopCommand(managers.getCompanyManager(), managers.getPlayerShopManager()),
+                new CompanyCommand(managers.getCompanyManager(), managers.getTeamManager(), managers.getEconomyManager(), managers.getShopBlocksManager(), managers.getPlayerShopManager()),
+                new ShopCommand(managers.getCompanyManager(), managers.getPlayerShopManager(), managers.getShopBlocksManager()),
                 new MineCommand(),
                 new AdminShopCommand(),
                 new PayCommands(),
@@ -473,7 +469,7 @@ public final class AywenCraftPlugin extends JavaPlugin {
                 new LBBlockBreakListener(managers.getLuckyBlockManager()),
                 new LBPlayerQuitListener(managers.getLuckyBlockManager()),
                 new LBPlayerInteractListener(managers.getLuckyBlockManager()),
-                new ShopListener(managers.getCompanyManager(), managers.getPlayerShopManager()),
+                new ShopListener(managers.getCompanyManager(), managers.getPlayerShopManager(), managers.getShopBlocksManager()),
                 new LBEntityDeathListener(managers.getLuckyBlockManager())
         );
 

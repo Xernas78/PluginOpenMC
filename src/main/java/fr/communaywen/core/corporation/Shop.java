@@ -14,6 +14,7 @@ import fr.communaywen.core.utils.world.Yaw;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Barrel;
 import org.bukkit.block.Block;
@@ -36,34 +37,33 @@ public class Shop {
 
     private final ShopOwner owner;
     private final EconomyManager economyManager;
+    private final ShopBlocksManager blocksManager;
     private final List<ShopItem> items = new ArrayList<>();
     private final List<ShopItem> sales = new ArrayList<>();
     private final Map<Long, Supply> suppliers = new HashMap<>();
     private final int index;
     private final UUID uuid = UUID.randomUUID();
-    private final Block cashBlock;
-    private final Block stockBlock;
 
     private double turnover = 0;
 
-    public Shop(ShopOwner owner, Block stockBlock, Block cashBlock, int index, EconomyManager economyManager) {
+    public Shop(ShopOwner owner, int index, EconomyManager economyManager, ShopBlocksManager blocksManager) {
         this.owner = owner;
-        this.stockBlock = stockBlock;
-        this.cashBlock = cashBlock;
         this.index = index;
         this.economyManager = economyManager;
+        this.blocksManager = blocksManager;
     }
 
     public void checkStock() {
-        Block stockBlock = getStockBlock();
-        if (stockBlock == null || stockBlock.getType() != Material.BARREL) {
-            removeShop();
+        Multiblock multiblock = blocksManager.getMultiblock(getUuid());
+        if (multiblock != null) {
+            return;
+        }
+        Block stockBlock = multiblock.getStockBlock().getBlock();
+        if (stockBlock.getType() != Material.BARREL) {
+            blocksManager.removeShop(this);
             return;
         }
         if (stockBlock.getState() instanceof Barrel barrel) {
-            if (!barrel.getPersistentDataContainer().has(owner.isCompany() ? AywenCraftPlugin.COMPANY_SHOP_KEY : AywenCraftPlugin.PLAYER_SHOP_KEY, PersistentDataType.STRING)) {
-                removeShop();
-            }
             Inventory inventory = barrel.getInventory();
             for (ItemStack item : inventory.getContents()) {
                 if (item == null || item.getType() == Material.AIR) {
@@ -258,67 +258,22 @@ public class Shop {
         return inventory;
     }
 
-    public static UUID getShopPlayerLookingAt(Player player, boolean isCompany, boolean onlySign) {
+    public static UUID getShopPlayerLookingAt(Player player, ShopBlocksManager shopBlocksManager, boolean onlyCash) {
         Block targetBlock = player.getTargetBlockExact(5);
         //TODO ItemsAdder cash register
         if (targetBlock == null || (targetBlock.getType() != Material.BARREL && targetBlock.getType() != Material.OAK_SIGN)) {
             return null;
         }
-        String shopUUID = null;
-        if (!onlySign) {
-            if (targetBlock.getState() instanceof Barrel barrel) {
-                shopUUID = barrel.getPersistentDataContainer().get(isCompany ? AywenCraftPlugin.COMPANY_SHOP_KEY : AywenCraftPlugin.PLAYER_SHOP_KEY, PersistentDataType.STRING);
+        if (onlyCash) {
+            if (targetBlock.getType() != Material.OAK_SIGN) {
+                return null;
             }
         }
-        else if (targetBlock.getState() instanceof Sign sign) {
-            shopUUID = sign.getPersistentDataContainer().get(isCompany ? AywenCraftPlugin.COMPANY_SHOP_KEY : AywenCraftPlugin.PLAYER_SHOP_KEY, PersistentDataType.STRING);
-        }
-        if (shopUUID == null) {
+        Shop shop = shopBlocksManager.getShop(targetBlock.getLocation());
+        if (shop == null) {
             return null;
         }
-        return UUID.fromString(shopUUID);
-    }
-
-    public void placeShop(Player player, boolean isCompany) {
-        Yaw yaw = WorldUtils.getYaw(player);
-        //TODO ItemsAdder cash register
-        cashBlock.setType(Material.OAK_SIGN);
-        BlockData cashData = cashBlock.getBlockData();
-        if (cashData instanceof Directional directional) {
-            directional.setFacing(yaw.getOpposite().toBlockFace());
-            cashBlock.setBlockData(directional);
-        }
-        Barrel barrel = (Barrel) stockBlock.getState();
-        barrel.getPersistentDataContainer().set(isCompany ? AywenCraftPlugin.COMPANY_SHOP_KEY : AywenCraftPlugin.PLAYER_SHOP_KEY, PersistentDataType.STRING, getUuid().toString());
-        barrel.update();
-        Sign sign = (Sign) cashBlock.getState();
-        sign.getPersistentDataContainer().set(isCompany ? AywenCraftPlugin.COMPANY_SHOP_KEY : AywenCraftPlugin.PLAYER_SHOP_KEY, PersistentDataType.STRING, getUuid().toString());
-        sign.update();
-    }
-
-    public boolean removeShop() {
-        //TODO ItemsAdder cash register
-        if (cashBlock == null || stockBlock == null || cashBlock.getType() != Material.OAK_SIGN || stockBlock.getType() != Material.BARREL) {
-            return false;
-        }
-        Sign sign = (Sign) cashBlock.getState();
-        if (sign.getPersistentDataContainer().has(AywenCraftPlugin.COMPANY_SHOP_KEY, PersistentDataType.STRING)) {
-            sign.getPersistentDataContainer().remove(AywenCraftPlugin.COMPANY_SHOP_KEY);
-        }
-        else {
-            sign.getPersistentDataContainer().remove(AywenCraftPlugin.PLAYER_SHOP_KEY);
-        }
-        cashBlock.setType(Material.AIR);
-        sign.update();
-        Barrel barrel = (Barrel) stockBlock.getState();
-        if (barrel.getPersistentDataContainer().has(AywenCraftPlugin.COMPANY_SHOP_KEY, PersistentDataType.STRING)) {
-            barrel.getPersistentDataContainer().remove(AywenCraftPlugin.COMPANY_SHOP_KEY);
-        }
-        else {
-            barrel.getPersistentDataContainer().remove(AywenCraftPlugin.PLAYER_SHOP_KEY);
-        }
-        barrel.update();
-        return true;
+        return shop.getUuid();
     }
 
     public static List<Shop> getAllShops(CompanyManager companyManager, PlayerShopManager playerShopManager) {
@@ -328,6 +283,19 @@ public class Shop {
         }
         shops.addAll(playerShopManager.getPlayerShops().values());
         return shops;
+    }
+
+    @Getter
+    public static class Multiblock {
+
+        private final Location stockBlock;
+        private final Location cashBlock;
+
+        public Multiblock(Location stockBlock, Location cashBlock) {
+            this.stockBlock = stockBlock;
+            this.cashBlock = cashBlock;
+        }
+
     }
 
 }

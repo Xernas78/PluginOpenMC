@@ -6,6 +6,7 @@ import fr.communaywen.core.contest.managers.ContestManager;
 import fr.communaywen.core.corporation.CompanyManager;
 import fr.communaywen.core.corporation.PlayerShopManager;
 import fr.communaywen.core.contest.cache.ContestCache;
+import fr.communaywen.core.corporation.ShopBlocksManager;
 import fr.communaywen.core.corpse.CorpseManager;
 import fr.communaywen.core.credit.FeatureManager;
 import fr.communaywen.core.credit.annotations.Credit;
@@ -65,6 +66,7 @@ public class Managers {
     private TeamManager teamManager;
     private CompanyManager companyManager;
     private PlayerShopManager playerShopManager;
+    private ShopBlocksManager shopBlocksManager;
     // :)
     private GuidelineManager guidelineManager;
     private FeatureManager featureManager;
@@ -144,6 +146,7 @@ public class Managers {
         scoreboardManager = new ScoreboardManager(plugin, contestManager);
         contestCache = new ContestCache(plugin, contestManager);
         this.teamManager = new TeamManager(plugin);
+        shopBlocksManager = new ShopBlocksManager(plugin);
         scoreboardManager = new ScoreboardManager(plugin, contestManager);
         dreamdimManager = new DimensionManager(plugin);
         homeManager = new HomeManager(plugin);
@@ -162,7 +165,7 @@ public class Managers {
         lbPlayerManager = new LBPlayerManager();
         this.teamManager = new TeamManager(plugin);
         this.companyManager = new CompanyManager();
-        this.playerShopManager = new PlayerShopManager(economyManager);
+        this.playerShopManager = new PlayerShopManager(economyManager, shopBlocksManager);
         homesManagers = new HomesManagers();
         homeUpgradeManager = new HomeUpgradeManager(homesManagers, plugin);
         settingsManager = new SettingsManager(plugin);

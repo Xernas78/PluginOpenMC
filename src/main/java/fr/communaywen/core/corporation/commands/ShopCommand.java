@@ -26,10 +26,12 @@ public class ShopCommand {
 
     private final CompanyManager companyManager;
     private final PlayerShopManager playerShopManager;
+    private final ShopBlocksManager shopBlocksManager;
 
-    public ShopCommand(CompanyManager companyManager, PlayerShopManager playerShopManager) {
+    public ShopCommand(CompanyManager companyManager, PlayerShopManager playerShopManager, ShopBlocksManager shopBlocksManager) {
         this.companyManager = companyManager;
         this.playerShopManager = playerShopManager;
+        this.shopBlocksManager = shopBlocksManager;
     }
 
     @DefaultFor("~")
@@ -93,7 +95,7 @@ public class ShopCommand {
     public void sellItem(Player player, @Named("price") double price) {
         boolean isInCompany = companyManager.isInCompany(player.getUniqueId());
         if (isInCompany) {
-            UUID shopUUID = Shop.getShopPlayerLookingAt(player, isInCompany, false);
+            UUID shopUUID = Shop.getShopPlayerLookingAt(player, shopBlocksManager, false);
             if (shopUUID == null) {
                 player.sendMessage(ChatColor.RED + "Shop non reconnu");
                 return;
@@ -138,7 +140,7 @@ public class ShopCommand {
     public void unsellItem(Player player, @Named("item number") int itemIndex) {
         boolean isInCompany = companyManager.isInCompany(player.getUniqueId());
         if (isInCompany) {
-            UUID shopUUID = Shop.getShopPlayerLookingAt(player, isInCompany, false);
+            UUID shopUUID = Shop.getShopPlayerLookingAt(player, shopBlocksManager, false);
             if (shopUUID == null) {
                 player.sendMessage(ChatColor.RED + "Shop non reconnu");
                 return;
@@ -195,7 +197,7 @@ public class ShopCommand {
     @Description("Delete a shop")
     public void deleteShop(Player player) {
         boolean isInCompany = companyManager.isInCompany(player.getUniqueId());
-        UUID shopUUID = Shop.getShopPlayerLookingAt(player, isInCompany, false);
+        UUID shopUUID = Shop.getShopPlayerLookingAt(player, shopBlocksManager, false);
         if (shopUUID == null) {
             player.sendMessage(ChatColor.RED + "Shop non reconnu");
             return;

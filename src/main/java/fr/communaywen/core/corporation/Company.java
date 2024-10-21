@@ -21,6 +21,7 @@ public class Company {
 
     private final String name;
     private final EconomyManager economyManager;
+    private final ShopBlocksManager shopBlocksManager;
     private final Map<UUID, MerchantData> merchants = new HashMap<>();
     private final List<Shop> shops = new ArrayList<>();
     private final Queue<Long, TransactionData> transactions = new Queue<>(150);
@@ -32,10 +33,11 @@ public class Company {
 
     private int shopCounter = 0;
 
-    public Company(String name, CompanyOwner owner, EconomyManager economyManager) {
+    public Company(String name, CompanyOwner owner, EconomyManager economyManager, ShopBlocksManager shopBlocksManager) {
         this.name = name;
         this.owner = owner;
         this.economyManager = economyManager;
+        this.shopBlocksManager = shopBlocksManager;
     }
 
     public double getTurnover() {
@@ -62,12 +64,13 @@ public class Company {
         return null;
     }
 
-    public boolean createShop(Player whoCreated, Block barrel, Block cashRegister) {
+    public boolean createShop(Player whoCreated, Block barrel, Block cash) {
         if (withdraw(100, whoCreated, "Création de shop", economyManager)) {
-            Shop newShop = new Shop(new ShopOwner(this), barrel, cashRegister, shopCounter, economyManager);
+            Shop newShop = new Shop(new ShopOwner(this), shopCounter, economyManager, shopBlocksManager);
             shops.add(newShop);
             economyManager.withdrawBalance(whoCreated.getUniqueId(), 100);
-            newShop.placeShop(whoCreated, true);
+            shopBlocksManager.registerMultiblock(newShop, new Shop.Multiblock(barrel.getLocation(), cash.getLocation()));
+            shopBlocksManager.placeShop(newShop, whoCreated, true);
             shopCounter++;
             return true;
         }
@@ -83,7 +86,7 @@ public class Company {
                 if (!deposit(75, player, "Suppression de shop", economyManager)) {
                     return MethodState.SPECIAL;
                 }
-                if (!shop.removeShop()) {
+                if (!shopBlocksManager.removeShop(shop)) {
                     return MethodState.ESCAPE;
                 }
                 shops.remove(shop);
